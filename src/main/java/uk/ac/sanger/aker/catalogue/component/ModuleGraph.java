@@ -7,6 +7,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
+import static uk.ac.sanger.aker.catalogue.model.Module.END;
+import static uk.ac.sanger.aker.catalogue.model.Module.START;
+
 /**
  * @author dr6
  */
@@ -21,7 +24,7 @@ public class ModuleGraph {
 
     private List<ModulePair> pairs;
     private ModuleLayout layout;
-    private ModuleWrapper selected;
+    private Module selected;
 
     public ModuleGraph(ModuleLayout layout, List<ModulePair> pairs) {
         this.layout = layout;
@@ -45,17 +48,22 @@ public class ModuleGraph {
         g.setClip(oldClip);
     }
 
+    private static Color moduleColour(Module module) {
+        if (module==START || module==END) {
+            return endFill;
+        }
+        return moduleFill;
+    }
+
     public void draw(Graphics2D g) {
         FontMetrics fontMetrics = g.getFontMetrics();
         int textY = (MODULE_HEIGHT - fontMetrics.getHeight())/2 + fontMetrics.getAscent();
 
-        drawModule(g, "START", layout.getStartPoint(), fontMetrics, textY, endFill);
         for (Map.Entry<Module, Point> e : layout.entries()) {
             Module module = e.getKey();
             Point pos = e.getValue();
-            drawModule(g, module.getName(), pos, fontMetrics, textY, moduleFill);
+            drawModule(g, module.getName(), pos, fontMetrics, textY, moduleColour(module));
         }
-        drawModule(g, "END", layout.getEndPoint(), fontMetrics, textY, endFill);
 
         if (selected!=null) {
             drawSelected(g, selected);
@@ -63,17 +71,8 @@ public class ModuleGraph {
         drawPaths(g);
     }
 
-    private void drawSelected(Graphics2D g, ModuleWrapper selected) {
-        Point pos;
-        if (selected.module!=null) {
-            pos = layout.get(selected.module);
-        } else if (selected.start) {
-            pos = layout.getStartPoint();
-        } else if (selected.end) {
-            pos = layout.getEndPoint();
-        } else {
-            return;
-        }
+    private void drawSelected(Graphics2D g, Module selected) {
+        Point pos = layout.get(selected);
         int x = pos.x - MODULE_WIDTH/2;
         int y = pos.y - MODULE_HEIGHT/2;
         g.setColor(Color.blue);
@@ -106,25 +105,16 @@ public class ModuleGraph {
         }
     }
 
-    public void select(ModuleWrapper mw) {
+    public void select(Module mw) {
         this.selected = mw;
     }
 
-    public ModuleWrapper getSelected() {
+    public Module getSelected() {
         return selected;
     }
 
-    public Point position(ModuleWrapper mw) {
-        if (mw.module!=null) {
-            return layout.get(mw.module);
-        }
-        if (mw.start) {
-            return layout.getStartPoint();
-        }
-        if (mw.end) {
-            return layout.getEndPoint();
-        }
-        return null;
+    public Point position(Module module) {
+        return layout.get(module);
     }
 
     public void moveSelected(int dx, int dy) {
@@ -135,17 +125,17 @@ public class ModuleGraph {
         move(selected, pos.x + dx, pos.y + dy);
     }
 
-    private void move(ModuleWrapper wr, int newx, int newy) {
+    private void move(Module wr, int newx, int newy) {
         Point pos = position(selected);
         pos.x = newx;
         for (ModulePair pair : pairs) {
-            if (!wr.end && pair.getFrom()==wr.module) {
+            if (pair.getFrom()==wr) {
                 int y = layout.getTo(pair).y;
                 if (y <= newy) {
                     return;
                 }
             }
-            if (!wr.start && pair.getTo()==wr.module) {
+            if (pair.getTo()==wr) {
                 int y = layout.getFrom(pair).y;
                 if (y >= newy) {
                     return;
@@ -161,54 +151,12 @@ public class ModuleGraph {
         return (x >= 0 && y >= 0 && x < MODULE_WIDTH && y < MODULE_HEIGHT);
     }
 
-    public ModuleWrapper moduleAt(int x, int y) {
+    public Module moduleAt(int x, int y) {
         for (Map.Entry<Module, Point> entry : layout.entries()) {
             if (inModuleRect(x, y, entry.getValue())) {
-                return new ModuleWrapper(entry.getKey());
+                return entry.getKey();
             }
-        }
-        if (inModuleRect(x, y, layout.getStartPoint())) {
-            return ModuleWrapper.start();
-        }
-        if (inModuleRect(x, y, layout.getEndPoint())) {
-            return ModuleWrapper.end();
         }
         return null;
-    }
-
-    public static class ModuleWrapper {
-        private Module module;
-        private boolean start;
-        private boolean end;
-
-        public ModuleWrapper(Module module) {
-            this.module = module;
-        }
-
-        public static ModuleWrapper start() {
-            ModuleWrapper mw = new ModuleWrapper(null);
-            mw.start = true;
-            return mw;
-        }
-
-        public static ModuleWrapper end() {
-            ModuleWrapper mw = new ModuleWrapper(null);
-            mw.end = true;
-            return mw;
-        }
-
-        @Override
-        public String toString() {
-            if (module!=null) {
-                return String.format("ModuleWrapper(\"%s\")", module.getName());
-            }
-            if (start) {
-                return "ModuleWrapper.start";
-            }
-            if (end) {
-                return "ModuleWrapper.end";
-            }
-            return "ModuleWrapper(null)";
-        }
     }
 }

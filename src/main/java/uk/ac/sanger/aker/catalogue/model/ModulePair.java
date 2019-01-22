@@ -37,4 +37,9 @@ public class ModulePair {
     public void setDefaultPath(boolean defaultPath) {
         this.defaultPath = defaultPath;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ModulePair(%s, %s)", from, to);
+    }
 }

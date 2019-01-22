@@ -13,25 +13,9 @@ import java.util.Set;
  */
 public class ModuleLayout {
     private Map<Module, Point> positions;
-    private Point startPoint;
-    private Point endPoint;
 
-    public ModuleLayout(Map<Module, Point> positions, Point startPoint, Point endPoint) {
+    public ModuleLayout(Map<Module, Point> positions) {
         this.positions = positions;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-    }
-
-    public Map<Module, Point> getPositions() {
-        return this.positions;
-    }
-
-    public Point getStartPoint() {
-        return this.startPoint;
-    }
-
-    public Point getEndPoint() {
-        return this.endPoint;
     }
 
     public Point get(Module module) {
@@ -43,18 +27,10 @@ public class ModuleLayout {
     }
 
     public Point getFrom(ModulePair pair) {
-        Module from = pair.getFrom();
-        if (from==null) {
-            return getStartPoint();
-        }
-        return get(from);
+        return get(pair.getFrom());
     }
 
     public Point getTo(ModulePair pair) {
-        Module to = pair.getTo();
-        if (to==null) {
-            return getEndPoint();
-        }
-        return get(to);
+        return get(pair.getTo());
     }
 }

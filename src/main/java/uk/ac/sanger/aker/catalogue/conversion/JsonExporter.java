@@ -45,12 +45,12 @@ public class JsonExporter extends JsonOutput {
 
             pairArrayBuilder.add(
                     createObjectBuilder()
-                            .add("from_step", fromMod==null ? null : fromMod.getName())
-                            .add("to_step", toMod==null ? null : toMod.getName())
+                            .add("from_step", fromMod.serialisationName())
+                            .add("to_step", toMod.serialisationName())
                             .add("default_path", pair.isDefaultPath())
             );
 
-            if (toMod!=null && moduleNames.add(toMod.getName()) && toMod.hasParameter()) {
+            if (toMod!=Module.END && moduleNames.add(toMod.getName()) && toMod.hasParameter()) {
                 paramArrayBuilder.add(
                         createObjectBuilder()
                                 .add("name", toMod.getName())

@@ -7,7 +7,6 @@ import uk.ac.sanger.aker.catalogue.model.ModulePair;
 import java.awt.Point;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author dr6
@@ -15,11 +14,8 @@ import java.util.stream.Stream;
 public class ModuleLayoutUtil {
 
     public static List<List<Module>> getRows(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
-        Stream<? extends ModulePair> pairStream = pairs.stream()
-                .filter(pair -> pair.getFrom()!=null && pair.getTo()!=null);
-
         TopologicalSorter<Module> sorter = new TopologicalSorter<>(modules);
-        sorter.setRelations(pairStream, ModulePair::getFrom, ModulePair::getTo);
+        sorter.setRelations(pairs, ModulePair::getFrom, ModulePair::getTo);
         Map<Module, Set<Module>> preceders = sorter.getPreceders().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> new HashSet<>(e.getValue())));
         modules = sorter.sort();
@@ -43,13 +39,12 @@ public class ModuleLayoutUtil {
         // Start is at (0,0).
         // Rows are below, to the left and right of zero, so (0,0) should be centre-top
         Map<Module, Point> positions = new HashMap<>(modules.size());
-        int y = dy;
+        int y = 0;
         int[] xoffsets = new int[rows.size()];
-        for (int i = 0; i < rows.size(); ++i) {
-            int prev = (i==0 ? 1 : rows.get(i).size());
-            int next = (i==rows.size()-1 ? 1 : rows.get(rows.size()-1).size());
-            if (prev==next && prev==rows.get(i).size()) {
-                if (i > 0 && xoffsets[i-1]!=0) {
+        for (int i = 1; i < rows.size()-1; ++i) {
+            int size = rows.get(i).size();
+            if (size==rows.get(i-1).size() && size==rows.get(i+1).size()) {
+                if (xoffsets[i-1]!=0) {
                     xoffsets[i] = -xoffsets[i-1];
                 } else {
                     xoffsets[i] = dx/2;
@@ -58,22 +53,22 @@ public class ModuleLayoutUtil {
         }
         for (int i = 0; i < rows.size(); i++) {
             List<Module> row = rows.get(i);
-            int x = xoffsets[i] -dx * (row.size() - 1) / 2;
+            int x = xoffsets[i] - dx * (row.size() - 1) / 2;
             for (Module mod : row) {
                 positions.put(mod, new Point(x, y));
                 x += dx;
             }
             y += dy;
         }
-        return new ModuleLayout(positions, new Point(0, 0), new Point(0, y));
+        return new ModuleLayout(positions);
     }
 
     public static ModuleLayout layOut(Collection<? extends ModulePair> pairs, int dx, int dy) {
         List<Module> modules = pairs.stream()
-                .map(ModulePair::getTo)
-                .filter(Objects::nonNull)
+                .map(ModulePair::getFrom)
                 .distinct()
                 .collect(Collectors.toList());
+        modules.add(Module.END);
         return layOut(modules, pairs, dx, dy);
     }
 }

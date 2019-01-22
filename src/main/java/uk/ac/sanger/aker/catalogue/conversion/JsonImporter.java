@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
  * @author dr6
  */
 public class JsonImporter extends JsonInput {
+    private enum PairPosition { FROM, TO };
 
     public Catalogue importCatalogue(JsonValue jsonValue) throws IOException {
         Objects.requireNonNull(jsonValue, "jsonValue is null");
@@ -39,9 +40,9 @@ public class JsonImporter extends JsonInput {
         return catalogue;
     }
 
-    private Module getModule(String name, List<Module> modules, Map<String, Module> moduleNames) {
+    private Module getModule(String name, List<Module> modules, Map<String, Module> moduleNames, PairPosition pos) {
         if (name==null) {
-            return null;
+            return (pos==PairPosition.FROM ? Module.START : Module.END);
         }
         Module mod = moduleNames.get(name);
         if (mod!=null) {
@@ -66,8 +67,8 @@ public class JsonImporter extends JsonInput {
                 String toName = pairData.getString("to_step", null);
                 String fromName = pairData.getString("from_step", null);
                 boolean defaultPath = pairData.getBoolean("default_path", false);
-                Module toMod = getModule(toName, modules, moduleNames);
-                Module fromMod = getModule(fromName, modules, moduleNames);
+                Module toMod = getModule(toName, modules, moduleNames, PairPosition.TO);
+                Module fromMod = getModule(fromName, modules, moduleNames, PairPosition.FROM);
                 modulePairs.add(new ModulePair(fromMod, toMod, defaultPath));
             }
             for (JsonObject paramData : iterObjects(proData, "module_parameters")) {

@@ -1,6 +1,5 @@
 package uk.ac.sanger.aker.catalogue.component;
 
-import uk.ac.sanger.aker.catalogue.component.ModuleGraph.ModuleWrapper;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
 import uk.ac.sanger.aker.catalogue.model.Module;
 import uk.ac.sanger.aker.catalogue.sorting.ModuleLayoutUtil;
@@ -39,7 +38,7 @@ public class ProcessModulePanel extends JPanel {
                 }
                 mouseX = e.getX() - x0;
                 mouseY = e.getY() - y0;
-                ModuleWrapper wr = graph.moduleAt(mouseX, mouseY);
+                Module mod = graph.moduleAt(mouseX, mouseY);
                 boolean left = SwingUtilities.isLeftMouseButton(e);
                 boolean right = SwingUtilities.isRightMouseButton(e);
                 if (left && (e.getModifiers() & InputEvent.CTRL_MASK) != 0) {
@@ -47,7 +46,7 @@ public class ProcessModulePanel extends JPanel {
                     right = true;
                 }
                 if (left) {
-                    graph.select(wr);
+                    graph.select(mod);
                     repaint();
                 } else if (right) {
 
@@ -93,12 +92,11 @@ public class ProcessModulePanel extends JPanel {
 
     private void updateDimension() {
         ModuleLayout layout = getModuleLayout();
-        Point start = layout.getStartPoint();
-        Point end = layout.getEndPoint();
-        int minx = Math.min(start.x, end.x);
-        int maxx = Math.max(start.x, end.x);
-        int miny = Math.min(start.y, end.y);
-        int maxy = Math.max(start.y, end.y);
+        Point start = layout.get(Module.START);
+        int minx = start.x;
+        int miny = start.y;
+        int maxx = start.x;
+        int maxy = start.y;
         for (Map.Entry<Module, Point> entry : getModuleLayout().entries()) {
             Point pos = entry.getValue();
             int x = pos.x;
@@ -108,11 +106,11 @@ public class ProcessModulePanel extends JPanel {
             miny = Math.min(y, miny);
             maxy = Math.max(y, maxy);
         }
-        minx -= 80;
-        maxx += 80;
-        miny -= 50;
-        maxy += 50;
-        prefDim = new Dimension(maxx-minx, maxy-miny);
+//        minx -= 80;
+//        maxx += 80;
+//        miny -= 50;
+//        maxy += 50;
+        prefDim = new Dimension(maxx-minx + 130, maxy-miny + 130);
     }
 
     @Override
@@ -127,7 +125,7 @@ public class ProcessModulePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         ModuleLayout layout = getModuleLayout();
-        ModuleWrapper selected = (graph==null ? null : graph.getSelected());
+        Module selected = (graph==null ? null : graph.getSelected());
         graph = new ModuleGraph(layout, process.getModulePairs());
         graph.select(selected);
         Graphics g2 = g.create();

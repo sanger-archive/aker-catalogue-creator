@@ -3,7 +3,6 @@ package uk.ac.sanger.aker.catalogue.sorting;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A topological sort is a way of sorting a partially ordered collection.
@@ -18,7 +17,7 @@ public class TopologicalSorter<E> {
         this.items = items;
     }
 
-    public <P> void setRelations(Stream<? extends P> relations,
+    public <P> void setRelations(Iterable<? extends P> relations,
                                  Function<? super P, ? extends E> firstExtractor,
                                  Function<? super P, ? extends E> secondExtractor) {
         setRelations(relations.iterator(), firstExtractor, secondExtractor);
@@ -44,10 +43,6 @@ public class TopologicalSorter<E> {
 
     public Map<E, Set<E>> getPreceders() {
         return this.preceders;
-    }
-
-    public Map<E, List<E>> getFollowers() {
-        return this.followers;
     }
 
     /**
