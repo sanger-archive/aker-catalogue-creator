@@ -1,0 +1,7 @@
+Menus
+Explicit loading and saving
+Validate
+Replace all UUIDs
+Deploying
+Expanding graph where necessary
+(Undo?)

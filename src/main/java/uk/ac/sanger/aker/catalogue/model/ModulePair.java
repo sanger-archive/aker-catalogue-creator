@@ -14,6 +14,10 @@ public class ModulePair {
         this.defaultPath = defaultPath;
     }
 
+    public ModulePair(ModulePair other) {
+        this(other.from, other.to, other.defaultPath);
+    }
+
     public Module getFrom() {
         return this.from;
     }

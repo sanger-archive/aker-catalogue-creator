@@ -4,6 +4,7 @@ import uk.ac.sanger.aker.catalogue.component.ListNameRenderer;
 import uk.ac.sanger.aker.catalogue.model.HasName;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -58,6 +59,10 @@ public class ListComponent<E extends HasName> extends JPanel {
         });
     }
 
+    public void addSelectionListener(ListSelectionListener listener) {
+        list.addListSelectionListener(listener);
+    }
+
     private void addNew() {
         E newElement = listActor.getNew();
         addElement(newElement);
@@ -74,6 +79,10 @@ public class ListComponent<E extends HasName> extends JPanel {
         if (item!=null) {
             listActor.open(item);
         }
+    }
+
+    public E getSelectedItem() {
+        return list.getSelectedValue();
     }
 
     private void fireDelete() {

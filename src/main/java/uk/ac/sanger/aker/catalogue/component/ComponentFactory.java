@@ -82,10 +82,15 @@ public class ComponentFactory {
         return action;
     }
 
-    private static class RunnableAction extends AbstractAction {
+    public static class RunnableAction extends AbstractAction {
         private final Runnable runnable;
-        private RunnableAction(Runnable runnable) {
+
+        public RunnableAction(String name, Runnable runnable) {
+            super(name);
             this.runnable = runnable;
+        }
+        public RunnableAction(Runnable runnable) {
+            this(null, runnable);
         }
         @Override
         public void actionPerformed(ActionEvent e) {

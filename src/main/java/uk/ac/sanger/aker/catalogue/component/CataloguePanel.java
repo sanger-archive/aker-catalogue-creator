@@ -5,6 +5,8 @@ import uk.ac.sanger.aker.catalogue.component.list.*;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
@@ -73,11 +75,17 @@ public class CataloguePanel extends EditPanel {
         add(productList, new GridBagConstraints(0, 6, 2, 1, 1.0, 1.0,
                 GridBagConstraints.PAGE_START, GridBagConstraints.NONE, insets, 0, 0));
         setMinimumSize(getPreferredSize());
+
+        processList.addSelectionListener(e -> app.processSelectionChanged());
     }
 
     @Override
     protected void updateState() {
         //TODO
+    }
+
+    public AkerProcess getSelectedProcess() {
+        return processList.getSelectedItem();
     }
 
     public Catalogue getCatalogue() {

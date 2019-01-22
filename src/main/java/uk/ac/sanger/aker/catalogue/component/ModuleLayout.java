@@ -41,4 +41,8 @@ public class ModuleLayout {
     public void put(Module module, Point pos) {
         positions.put(module, pos);
     }
+
+    public void retainModules(Set<Module> modules) {
+        positions.keySet().retainAll(modules);
+    }
 }

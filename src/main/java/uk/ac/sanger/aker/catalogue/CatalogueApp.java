@@ -1,13 +1,15 @@
 package uk.ac.sanger.aker.catalogue;
 
-import uk.ac.sanger.aker.catalogue.component.CatalogueFrame;
+import uk.ac.sanger.aker.catalogue.component.*;
+import uk.ac.sanger.aker.catalogue.component.ComponentFactory.RunnableAction;
 import uk.ac.sanger.aker.catalogue.conversion.JsonImporter;
 import uk.ac.sanger.aker.catalogue.model.*;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author dr6
@@ -15,6 +17,9 @@ import java.nio.file.Paths;
 public class CatalogueApp implements Runnable {
     private Catalogue catalogue;
     private CatalogueFrame frame;
+    private CopiedModuleMap copiedModuleMap;
+    private Action copyModuleMapAction;
+    private Action pasteModuleMapAction;
 
     @Override
     public void run() {
@@ -38,7 +43,17 @@ public class CatalogueApp implements Runnable {
     }
 
     private JMenuBar createMenuBar() {
+        copyModuleMapAction = new RunnableAction("Copy module map", this::copyModuleMap);
+        pasteModuleMapAction = new RunnableAction("Paste module map", this::pasteModuleMap);
+        copyModuleMapAction.setEnabled(false);
+        pasteModuleMapAction.setEnabled(false);
         JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        menuBar.add(fileMenu);
+        JMenu editMenu = new JMenu("Edit");
+        menuBar.add(editMenu);
+        editMenu.add(copyModuleMapAction);
+        editMenu.add(pasteModuleMapAction);
         return menuBar;
     }
 
@@ -68,5 +83,40 @@ public class CatalogueApp implements Runnable {
 
     public CatalogueFrame getFrame() {
         return this.frame;
+    }
+
+    private AkerProcess getSelectedProcess() {
+        CataloguePanel cp = frame.getCataloguePanel();
+        return (cp==null ? null : cp.getSelectedProcess());
+    }
+
+    private void copyModuleMap() {
+        AkerProcess pro = getSelectedProcess();
+        if (pro==null) {
+            return;
+        }
+        copiedModuleMap = new CopiedModuleMap(frame.getModuleLayout(pro), pro.getModulePairs());
+    }
+
+    private void pasteModuleMap() {
+        AkerProcess pro = getSelectedProcess();
+        if (pro==null || copiedModuleMap==null) {
+            return;
+        }
+        Set<Module> catalogueModules = new HashSet<>(catalogue.getModules());
+        catalogueModules.add(Module.START);
+        catalogueModules.add(Module.END);
+        copiedModuleMap.filter(catalogueModules);
+        frame.saveModuleLayout(pro, copiedModuleMap.getLayout());
+        pro.setModulePairs(copiedModuleMap.getPairs());
+        pasteModuleMapAction.setEnabled(false);
+        frame.clearEditPanel();
+        frame.view(pro);
+    }
+
+    public void processSelectionChanged() {
+        boolean proSel = (getSelectedProcess()!=null);
+        copyModuleMapAction.setEnabled(proSel);
+        pasteModuleMapAction.setEnabled(proSel && copiedModuleMap!=null);
     }
 }

@@ -67,4 +67,8 @@ public class CatalogueFrame extends JFrame {
     public void saveModuleLayout(AkerProcess process, ModuleLayout layout) {
         moduleLayoutCache.put(process, layout);
     }
+
+    public CataloguePanel getCataloguePanel() {
+        return cataloguePanel;
+    }
 }
