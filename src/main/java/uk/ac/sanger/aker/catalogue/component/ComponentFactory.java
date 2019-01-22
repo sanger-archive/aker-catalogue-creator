@@ -1,7 +1,6 @@
 package uk.ac.sanger.aker.catalogue.component;
 
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.*;
 
@@ -14,7 +13,11 @@ public class ComponentFactory {
     }
 
     public static JSpinner makeSpinner(int value) {
-        SpinnerNumberModel model = new SpinnerNumberModel(value, null, null, 1);
+        return makeSpinner(value, null);
+    }
+
+    public static JSpinner makeSpinner(int value, Integer min) {
+        SpinnerNumberModel model = new SpinnerNumberModel(value, min, null, 1);
         JSpinner spinner = new JSpinner(model);
         JComponent editor = spinner.getEditor();
         if (editor instanceof JSpinner.DefaultEditor) {
@@ -48,13 +51,8 @@ public class ComponentFactory {
         return button;
     }
 
-    public static Action registerDelete(JComponent component, final Runnable action) {
-        return registerDelete(component, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                action.run();
-            }
-        });
+    public static Action registerDelete(JComponent component, Runnable runnable) {
+        return registerDelete(component, new RunnableAction(runnable));
     }
 
     public static Action registerDelete(JComponent component, Action action) {
@@ -63,5 +61,26 @@ public class ComponentFactory {
         component.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
                 JComponent.WHEN_FOCUSED);
         return action;
+    }
+
+    public static Action registerEnter(JComponent component, Runnable runnable) {
+        return registerEnter(component, new RunnableAction(runnable));
+    }
+
+    public static Action registerEnter(JComponent component, Action action ) {
+        component.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_FOCUSED);
+        return action;
+    }
+
+    private static class RunnableAction extends AbstractAction {
+        private final Runnable runnable;
+        private RunnableAction(Runnable runnable) {
+            this.runnable = runnable;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            runnable.run();
+        }
     }
 }

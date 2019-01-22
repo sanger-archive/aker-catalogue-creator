@@ -53,6 +53,10 @@ public class Module implements HasName {
         return (this.minValue!=null || this.maxValue!=null);
     }
 
+    public boolean isEndpoint() {
+        return (this==START || this==END);
+    }
+
     @Override
     public String toString() {
         if (this==START) {

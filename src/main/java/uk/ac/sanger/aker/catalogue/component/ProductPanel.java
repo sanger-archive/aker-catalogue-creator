@@ -42,8 +42,7 @@ public class ProductPanel extends EditPanel {
         uuidField = new UuidField(product);
         descField = makeTextField();
         bioTypeField = makeTextField();
-        versionField = makeSpinner();
-        ((SpinnerNumberModel) versionField.getModel()).setMinimum(0);
+        versionField = makeSpinner(0, 0);
         availableCheckbox = makeCheckbox();
         processList = new ProcessList(app.getCatalogue().getProcesses(), product);
 

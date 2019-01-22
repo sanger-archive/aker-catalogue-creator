@@ -33,4 +33,8 @@ public class ModuleLayout {
     public Point getTo(ModulePair pair) {
         return get(pair.getTo());
     }
+
+    public void remove(Module module) {
+        positions.remove(module);
+    }
 }

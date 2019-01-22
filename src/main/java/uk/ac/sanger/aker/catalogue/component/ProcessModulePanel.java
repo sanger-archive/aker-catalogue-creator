@@ -5,9 +5,7 @@ import uk.ac.sanger.aker.catalogue.model.Module;
 import uk.ac.sanger.aker.catalogue.sorting.ModuleLayoutUtil;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Map;
 
 /**
@@ -18,67 +16,19 @@ public class ProcessModulePanel extends JPanel {
 
     private AkerProcess process;
     private ModuleGraph graph;
+    private ModuleMouseControl mouseControl;
     private Dimension prefDim;
-    private int mouseX, mouseY;
-    private int x0, y0;
-    private boolean dragged;
-    private boolean addingPath;
 
     public ProcessModulePanel(CatalogueFrame frame, AkerProcess process) {
         this.frame = frame;
         this.process = process;
         setBackground(Color.white);
-        MouseAdapter ml = new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                dragged = false;
-                addingPath = false;
-                if (graph==null) {
-                    return;
-                }
-                mouseX = e.getX() - x0;
-                mouseY = e.getY() - y0;
-                Module mod = graph.moduleAt(mouseX, mouseY);
-                boolean left = SwingUtilities.isLeftMouseButton(e);
-                boolean right = SwingUtilities.isRightMouseButton(e);
-                if (left && (e.getModifiers() & InputEvent.CTRL_MASK) != 0) {
-                    left = false;
-                    right = true;
-                }
-                if (left) {
-                    graph.select(mod);
-                    repaint();
-                } else if (right) {
-
-                    // do something with the path
-                    // TODO
-                }
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (graph==null || graph.getSelected()==null) {
-                    return;
-                }
-                dragged = true;
-                int x = e.getX()-x0;
-                int y = e.getY()-y0;
-                graph.moveSelected(x-mouseX, y-mouseY);
-                mouseX = x;
-                mouseY = y;
-                repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (dragged) {
-                    updateDimension();
-                    dragged = false;
-                }
-            }
-        };
-        addMouseListener(ml);
-        addMouseMotionListener(ml);
+        mouseControl = new ModuleMouseControl(this);
+        addMouseListener(mouseControl);
+        addMouseMotionListener(mouseControl);
+        new ModuleKeyControl(this);
+        graph = new ModuleGraph(getModuleLayout(), process.getModulePairs());
+        setFocusable(true);
     }
 
     private ModuleLayout getModuleLayout() {
@@ -90,7 +40,7 @@ public class ProcessModulePanel extends JPanel {
         return layout;
     }
 
-    private void updateDimension() {
+    public void updateDimension() {
         ModuleLayout layout = getModuleLayout();
         Point start = layout.get(Module.START);
         int minx = start.x;
@@ -106,10 +56,6 @@ public class ProcessModulePanel extends JPanel {
             miny = Math.min(y, miny);
             maxy = Math.max(y, maxy);
         }
-//        minx -= 80;
-//        maxx += 80;
-//        miny -= 50;
-//        maxy += 50;
         prefDim = new Dimension(maxx-minx + 130, maxy-miny + 130);
     }
 
@@ -124,18 +70,19 @@ public class ProcessModulePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ModuleLayout layout = getModuleLayout();
-        Module selected = (graph==null ? null : graph.getSelected());
-        graph = new ModuleGraph(layout, process.getModulePairs());
-        graph.select(selected);
         Graphics g2 = g.create();
         try {
-            x0 = getWidth()/2;
-            y0 = ModuleGraph.MODULE_HEIGHT;
+            int x0 = getWidth()/2;
+            int y0 = ModuleGraph.MODULE_HEIGHT;
+            mouseControl.setOrigin(x0, y0);
             g2.translate(x0, y0);
             graph.draw((Graphics2D) g2);
         } finally {
             g2.dispose();
         }
+    }
+
+    public ModuleGraph getGraph() {
+        return this.graph;
     }
 }

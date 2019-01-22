@@ -43,8 +43,7 @@ public class ProcessPanel extends EditPanel {
         headlineLabel = makeHeadline("Process");
         nameField = makeTextField();
         uuidField = new UuidField(process);
-        tatField = makeSpinner(0);
-        ((SpinnerNumberModel) tatField.getModel()).setMinimum(0);
+        tatField = makeSpinner(0, 0);
         classField = makeTextField();
         graphPanel = new ProcessModulePanel(app.getFrame(), process);
     }
