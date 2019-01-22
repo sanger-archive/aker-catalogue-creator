@@ -8,12 +8,35 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author dr6
  */
 public class ProcessModulePanel extends JPanel {
+    enum Hint {
+        DEL_MODULE("DEL", "delete selected module"),
+        DEL_ROUTE("DEL", "delete selected route"),
+        MAKE_DEFAULT("ENTER", "make route default"),
+        MAKE_NOT_DEFAULT("ENTER", "make route not default"),
+        ADD_MODULE("Double click", "Add module"),
+        SELECT("Left click", "Select module or route"),
+        ADD_ROUTE("Right drag", "Add new route"),
+        ;
+
+        private final String command, desc;
+
+        Hint(String command, String desc) {
+            this.command = command;
+            this.desc = desc;
+        }
+
+        @Override
+        public String toString() {
+            return command + "—" + desc;
+        }
+    }
+
     private CatalogueFrame frame;
     private ProcessPanel processPanel;
     private AkerProcess process;
@@ -86,41 +109,45 @@ public class ProcessModulePanel extends JPanel {
         super.paintComponent(g);
         Graphics g2 = g.create();
         try {
+            showHints(g);
             int x0 = getWidth()/2;
             int y0 = ModuleGraph.MODULE_HEIGHT;
             mouseControl.setOrigin(x0, y0);
             g2.translate(x0, y0);
             graph.draw((Graphics2D) g2);
-            showHint(g);
         } finally {
             g2.dispose();
         }
     }
 
-    private void showHint(Graphics g) {
-        String[] hints = getHints().split("\n");
+    private void showHints(Graphics g) {
+        Set<Hint> hints = getHints();
         g.setColor(Color.gray);
-        int y = 0;
-        int h = g.getFontMetrics().getMaxAscent();
-        for (String hint : hints) {
+        FontMetrics fm = g.getFontMetrics();
+        int y = fm.getMaxAscent();
+        int h = y + fm.getMaxDescent();
+        for (Hint hint : hints) {
+            g.drawString(hint.toString(), 2, y);
             y += h;
-            g.drawString(hint, 2, y);
         }
     }
 
-    private String getHints() {
+    private Set<Hint> getHints() {
         ModuleGraph graph = getGraph();
         if (graph.anySelected() && hasFocus()) {
-            return "DEL—delete selected module";
+            return EnumSet.of(Hint.DEL_MODULE);
         }
         if (graph.anyPairSelected() && hasFocus()) {
-            return "DEL—delete selected route\nENTER—toggle route default";
+            if (graph.getSelectedPair().isDefaultPath()) {
+                return EnumSet.of(Hint.DEL_ROUTE, Hint.MAKE_NOT_DEFAULT);
+            }
+            return EnumSet.of(Hint.DEL_ROUTE, Hint.MAKE_DEFAULT);
         }
         Module module = getModuleToAdd();
         if (module!=null && !graph.hasModule(module)) {
-            return "Double click—add module\nLeft click—select module or route\nRight-drag—add new route";
+            return EnumSet.of(Hint.ADD_MODULE, Hint.SELECT, Hint.ADD_ROUTE);
         }
-        return "Left click—select module or route\nRight-drag—add new route";
+        return EnumSet.of(Hint.SELECT, Hint.ADD_ROUTE);
     }
 
     public ModuleGraph getGraph() {

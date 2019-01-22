@@ -170,6 +170,10 @@ public class ModuleGraph {
         return (this.selectedPair!=null);
     }
 
+    public ModulePair getSelectedPair() {
+        return this.selectedPair;
+    }
+
     private boolean isPathStrong() {
         if (projectedTarget==null) {
             return false;
