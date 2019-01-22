@@ -55,6 +55,21 @@ public class ModuleMouseControl extends MouseAdapter {
     }
 
     @Override
+    public void mouseClicked(MouseEvent e) {
+        if (getButton(e)==Button.LEFT && e.getClickCount()==2) {
+            ModuleGraph graph = getGraph();
+            if (graph.moduleAt(lastX, lastY)!=null) {
+                return;
+            }
+            Module moduleToAdd = panel.getModuleToAdd();
+            if (moduleToAdd!=null && graph.addModule(moduleToAdd, lastX, lastY)) {
+                panel.clearModuleToAdd();
+                panel.repaint();
+            }
+        }
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (heldButton==null) {
             return;

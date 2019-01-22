@@ -2,9 +2,9 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import uk.ac.sanger.aker.catalogue.CatalogueApp;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
+import uk.ac.sanger.aker.catalogue.model.Module;
 
 import javax.swing.*;
-
 import java.awt.*;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
@@ -21,6 +21,7 @@ public class ProcessPanel extends EditPanel {
     private UuidField uuidField;
     private JSpinner tatField;
     private JTextField classField;
+    private JComboBox<Module> moduleCombo;
     private ProcessModulePanel graphPanel;
 
     public ProcessPanel(AkerProcess process, CatalogueApp app) {
@@ -45,7 +46,10 @@ public class ProcessPanel extends EditPanel {
         uuidField = new UuidField(process);
         tatField = makeSpinner(0, 0);
         classField = makeTextField();
-        graphPanel = new ProcessModulePanel(app.getFrame(), process);
+        graphPanel = new ProcessModulePanel(app.getFrame(), process, this);
+        moduleCombo = makeCombo(app.getCatalogue().getModules().toArray(new Module[0]));
+        moduleCombo.setRenderer(new ListNameRenderer());
+        moduleCombo.addActionListener(e -> graphPanel.repaint());
     }
 
     private void load() {
@@ -69,8 +73,14 @@ public class ProcessPanel extends EditPanel {
         addRow("UUID:", uuidField, 2, cleft, cright);
         addRow("TAT:", tatField, 3, cleft, cright);
         addRow("Process class:", classField, 4, cleft, cright);
-        cleft.gridy = 5;
-        add(makeLabel("Modules:"), cleft);
+        Box box = Box.createHorizontalBox();
+        box.add(makeLabel("To add:"));
+        box.add(Box.createHorizontalStrut(10));
+        box.add(moduleCombo);
+        cright.anchor = GridBagConstraints.LINE_END;
+        JLabel modulesLabel = makeLabel("Modules:");
+        modulesLabel.setFont(modulesLabel.getFont().deriveFont(Font.BOLD));
+        addRow(modulesLabel, box, 5, cleft, cright);
         add(graphPanel, new GridBagConstraints(0, 6, 2, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
     }
@@ -90,5 +100,13 @@ public class ProcessPanel extends EditPanel {
 
     public void claimFocus() {
         nameField.requestFocusInWindow();
+    }
+
+    public Module getModuleToAdd() {
+        return (Module) moduleCombo.getSelectedItem();
+    }
+
+    public void clearModuleToAdd() {
+        moduleCombo.setSelectedItem(null);
     }
 }

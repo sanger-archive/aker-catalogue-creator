@@ -15,10 +15,10 @@ public class ModuleGraph {
     private static final Color moduleFill = Color.cyan;
     private static final Color moduleOutline = Color.black;
     private static final Color moduleTextColour = Color.black;
-    private static final Color pathColour = new Color(0x80c8c800, true);
     private static final Color projectedPathWeakColour = new Color(0x80ffaaaa, true);
     private static final Color projectedPathStrongColour = new Color(0x80800080, true);
-    private static final Color defaultPathColour = new Color(0x8000ff00, true);
+    private static final Color pathColour = new Color(0x80808080, true);
+    private static final Color defaultPathColour = new Color(0x8000c000, true);
     public static final int MODULE_WIDTH = 120, MODULE_HEIGHT = 40;
 
     private List<ModulePair> pairs;
@@ -153,6 +153,7 @@ public class ModuleGraph {
     public void select(Module mw) {
         this.selected = mw;
         this.selectedPair = null;
+        this.projectedTarget = null;
     }
 
     public boolean anySelected() {
@@ -162,6 +163,7 @@ public class ModuleGraph {
     public void selectPair(ModulePair pair) {
         this.selectedPair = pair;
         this.selected = null;
+        this.projectedTarget = null;
     }
 
     public boolean anyPairSelected() {
@@ -204,6 +206,7 @@ public class ModuleGraph {
         pairs.removeIf(pair -> pair.getTo()==selected || pair.getFrom()==selected);
         layout.remove(selected);
         selected = null;
+        projectedTarget = null;
     }
 
     public void deleteSelectedPair() {
@@ -298,4 +301,22 @@ public class ModuleGraph {
     }
 
 
+    public boolean addModule(Module module, int x, int y) {
+        if (position(module)!=null) {
+            return false;
+        }
+        int miny = position(Module.START).y;
+        int maxy = position(Module.END).y;
+        if (miny + 1 >= maxy - 1) {
+            return false;
+        }
+        y = Math.max(miny, Math.min(maxy, y));
+        layout.put(module, new Point(x,y));
+        selected = module;
+        return true;
+    }
+
+    public boolean hasModule(Module module) {
+        return (position(module)!=null);
+    }
 }

@@ -2,7 +2,9 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import javax.swing.*;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.event.*;
+import java.util.List;
 
 /**
  * @author dr6
@@ -49,6 +51,13 @@ public class ComponentFactory {
         JButton button = new JButton(text);
         button.addActionListener(actionListener);
         return button;
+    }
+
+    public static <E> JComboBox<E> makeCombo(E[] items) {
+        DefaultComboBoxModel<E> model = new DefaultComboBoxModel<>(items);
+        JComboBox<E> combo = new JComboBox<>(model);
+        combo.setSelectedItem(null);
+        return combo;
     }
 
     public static Action registerDelete(JComponent component, Runnable runnable) {

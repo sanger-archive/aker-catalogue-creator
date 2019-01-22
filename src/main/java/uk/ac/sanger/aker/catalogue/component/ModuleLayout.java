@@ -37,4 +37,8 @@ public class ModuleLayout {
     public void remove(Module module) {
         positions.remove(module);
     }
+
+    public void put(Module module, Point pos) {
+        positions.put(module, pos);
+    }
 }
