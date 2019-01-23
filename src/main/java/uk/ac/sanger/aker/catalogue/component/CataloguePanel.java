@@ -50,24 +50,20 @@ public class CataloguePanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10,0,10,0);
+        Insets insets = new Insets(0,0,10,0);
         QuickConstraints constraints = new QuickConstraints(0,0,2,1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0);
         add(makeHeadline("Catalogue"), constraints);
 
         constraints.insets.left = 10;
         constraints.gridwidth = 1;
-        add("Pipeline:", constraints.incy().left());
-        add(pipelineField, constraints.right());
-
-        add("URL:", constraints.incy().left());
-        add(urlField, constraints.right());
-
-        add("LIMS ID:", constraints.incy().left());
-        add(limsIdField, constraints.right());
+        add("Pipeline:", pipelineField, constraints.incy());
+        add("URL:", urlField, constraints.incy());
+        add("LIMS ID:", limsIdField, constraints.incy());
 
         constraints.left();
         constraints.gridwidth = 2;
+        constraints.insets.top = 10;
         add(moduleList, constraints.incy());
         add(processList, constraints.incy());
         add(productList, constraints.incy());

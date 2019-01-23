@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 
+import java.awt.Component;
+
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 
 /**
@@ -29,7 +31,17 @@ abstract class EditPanel extends JPanel {
         return documentListener;
     }
 
-    public void add(String labelText, Object constraints) {
-        add(makeLabel(labelText), constraints);
+    public void add(Component left, Component right, QuickConstraints quickConstraints) {
+        if (left != null) {
+            add(left, quickConstraints.left());
+        }
+        if (right != null) {
+            add(right, quickConstraints.right());
+        }
+    }
+
+    public void add(String leftLabelText, Component right, QuickConstraints quickConstraints) {
+        Component left = (leftLabelText==null ? null : makeLabel(leftLabelText));
+        add(left, right, quickConstraints);
     }
 }

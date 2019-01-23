@@ -63,21 +63,14 @@ public class ProductPanel extends EditPanel {
         add(headlineLabel, constraints);
         constraints.gridwidth = 1;
         constraints.insets.left = 10;
-        add("Name:", constraints.incy().left());
-        add(nameField, constraints.right());
-        add("Description:", constraints.incy().left());
-        add(descField, constraints.right());
-        add("UUID:", constraints.incy().left());
-        add(uuidField, constraints.right());
-        add("Product version:", constraints.incy().left());
-        add(versionField, constraints.right());
-        add("Available:", constraints.incy().left());
-        add(availableCheckbox, constraints.right());
-        add("Requested bio type:", constraints.incy().left());
-        add(bioTypeField, constraints.right());
+        add("Name:", nameField, constraints.incy());
+        add("Description:", descField, constraints.incy());
+        add("UUID:", uuidField, constraints.incy());
+        add("Product version:", versionField, constraints.incy());
+        add("Available:", availableCheckbox, constraints.incy());
+        add("Requested bio type:", bioTypeField, constraints.incy());
         constraints.leftAnchor = GridBagConstraints.FIRST_LINE_END;
-        add("Processes:", constraints.incy().left());
-        add(processList, constraints.right());
+        add("Processes:", processList, constraints.incy());
     }
 
     private void load() {

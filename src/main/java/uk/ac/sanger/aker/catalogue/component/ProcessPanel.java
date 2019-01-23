@@ -62,29 +62,27 @@ public class ProcessPanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        QuickConstraints constraints = new QuickConstraints(new Insets(10, 0, 10, 0));
+        QuickConstraints constraints = new QuickConstraints(new Insets(0, 0, 10, 0));
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         add(headlineLabel, constraints);
         constraints.insets.left = 10;
         constraints.gridwidth = 1;
-        add("Name:", constraints.incy().left());
-        add(nameField, constraints.right());
-        add("UUID:", constraints.incy().left());
-        add(uuidField, constraints.right());
-        add("TAT:", constraints.incy().left());
-        add(tatField, constraints.right());
-        add("Process class:", constraints.incy().left());
-        add(classField, constraints.right());
+        add("Name:", nameField, constraints.incy());
+        add("UUID:", uuidField, constraints.incy());
+        add("TAT:", tatField, constraints.incy());
+        add("Process class:", classField, constraints.incy());
+
         Box box = Box.createHorizontalBox();
         box.add(makeLabel("To add:"));
         box.add(Box.createHorizontalStrut(10));
         box.add(moduleCombo);
         constraints.rightAnchor = GridBagConstraints.LINE_END;
+        constraints.insets.top = 10;
         JLabel modulesLabel = makeLabel("Modules:");
         modulesLabel.setFont(modulesLabel.getFont().deriveFont(Font.BOLD));
-        add(modulesLabel, constraints.incy().left());
-        add(box, constraints.right());
+
+        add(modulesLabel, box, constraints.incy());
         constraints.left().gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.HORIZONTAL;

@@ -43,19 +43,15 @@ public class ModulePanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10,0,10,0);
-        QuickConstraints constraints = new QuickConstraints(insets);
+        QuickConstraints constraints = new QuickConstraints(new Insets(10,0,10,0));
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         add(headlineLabel, constraints);
-        insets.left = 10;
+        constraints.insets.left = 10;
         constraints.gridwidth = 1;
-        add("Name:", constraints.incy().left());
-        add(nameField, constraints.right());
-        add("Min value:", constraints.incy().left());
-        add(minField, constraints.right());
-        add("Max value:", constraints.incy().left());
-        add(maxField, constraints.right());
+        add("Name:", nameField, constraints.incy());
+        add("Min value:", minField, constraints.incy());
+        add("Max value:", maxField, constraints.incy());
     }
 
     @Override
