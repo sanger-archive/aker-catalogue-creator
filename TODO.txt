@@ -1,4 +1,6 @@
+One-click selection
 Menus
+Add START and END to new processes
 Explicit loading and saving
 Validate
 Replace all UUIDs

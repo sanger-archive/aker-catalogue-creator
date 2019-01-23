@@ -24,7 +24,8 @@ public class ModuleLayoutUtil {
         rows.add(current);
         for (Module module : modules) {
             final Set<Module> precs = preceders.get(module);
-            if (current.stream().anyMatch(precs::contains)) {
+            if (module==Module.END || current.size()==1 && current.contains(Module.START)
+                    || current.stream().anyMatch(precs::contains)) {
                 current = new ArrayList<>();
                 rows.add(current);
             }
@@ -69,6 +70,9 @@ public class ModuleLayoutUtil {
                 .distinct()
                 .collect(Collectors.toList());
         modules.add(Module.END);
+        if (!modules.contains(Module.START)) {
+            modules.add(0, Module.START);
+        }
         return layOut(modules, pairs, dx, dy);
     }
 }

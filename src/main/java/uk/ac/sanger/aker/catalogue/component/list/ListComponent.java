@@ -98,4 +98,8 @@ public class ListComponent<E extends HasName> extends JPanel {
         remaining.forEach(model::addElement);
     }
 
+    public void setItems(List<E> items) {
+        model.clear();
+        items.forEach(model::addElement);
+    }
 }

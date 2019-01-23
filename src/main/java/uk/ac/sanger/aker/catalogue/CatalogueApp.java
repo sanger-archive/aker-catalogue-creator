@@ -18,6 +18,7 @@ public class CatalogueApp implements Runnable {
     private Catalogue catalogue;
     private CatalogueFrame frame;
     private CopiedModuleMap copiedModuleMap;
+    private Action newAction;
     private Action copyModuleMapAction;
     private Action pasteModuleMapAction;
 
@@ -30,7 +31,7 @@ public class CatalogueApp implements Runnable {
             e.printStackTrace();
             catalogue = new Catalogue();
         }
-
+        createActions();
         createFrame();
         frame.setJMenuBar(createMenuBar());
         frame.setVisible(true);
@@ -42,18 +43,24 @@ public class CatalogueApp implements Runnable {
         return frame;
     }
 
-    private JMenuBar createMenuBar() {
+    private void createActions() {
+        newAction = new RunnableAction("New catalogue", this::newCatalogue);
         copyModuleMapAction = new RunnableAction("Copy module map", this::copyModuleMap);
         pasteModuleMapAction = new RunnableAction("Paste module map", this::pasteModuleMap);
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
-        JMenuBar menuBar = new JMenuBar();
+    }
+
+    private JMenuBar createMenuBar() {
         JMenu fileMenu = new JMenu("File");
-        menuBar.add(fileMenu);
+        fileMenu.add(newAction);
         JMenu editMenu = new JMenu("Edit");
-        menuBar.add(editMenu);
         editMenu.add(copyModuleMapAction);
         editMenu.add(pasteModuleMapAction);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
         return menuBar;
     }
 
@@ -88,6 +95,11 @@ public class CatalogueApp implements Runnable {
     private AkerProcess getSelectedProcess() {
         CataloguePanel cp = frame.getCataloguePanel();
         return (cp==null ? null : cp.getSelectedProcess());
+    }
+
+    private void newCatalogue() {
+        catalogue = new Catalogue();
+        frame.clear();
     }
 
     private void copyModuleMap() {

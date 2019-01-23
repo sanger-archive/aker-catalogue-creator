@@ -26,23 +26,27 @@ public class CataloguePanel extends EditPanel {
     public CataloguePanel(CatalogueApp app) {
         this.app = app;
         initComponents();
+        load();
         layOut();
     }
 
     private void initComponents() {
-        Catalogue catalogue = getCatalogue();
         pipelineField = makeTextField();
-        pipelineField.setText(catalogue.getPipeline());
         urlField = makeTextField();
-        urlField.setText(catalogue.getUrl());
         limsIdField = makeTextField();
-        limsIdField.setText(catalogue.getLimsId());
         moduleList = new ListComponent<>("Modules:", new ModuleListActor(app));
         processList = new ListComponent<>("Processes:", new ProcessListActor(app));
         productList = new ListComponent<>("Products:", new ProductListActor(app));
-        catalogue.getModules().forEach(moduleList::addElement);
-        catalogue.getProcesses().forEach(processList::addElement);
-        catalogue.getProducts().forEach(productList::addElement);
+    }
+
+    public void load() {
+        Catalogue catalogue = getCatalogue();
+        pipelineField.setText(catalogue.getPipeline());
+        urlField.setText(catalogue.getUrl());
+        limsIdField.setText(catalogue.getLimsId());
+        moduleList.setItems(catalogue.getModules());
+        processList.setItems(catalogue.getProcesses());
+        productList.setItems(catalogue.getProducts());
     }
 
     private void layOut() {

@@ -4,7 +4,6 @@ import uk.ac.sanger.aker.catalogue.CatalogueApp;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.*;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +27,12 @@ public class CatalogueFrame extends JFrame {
 
         setContentPane(splitPane);
         setBounds(50,50,1200,700);
+    }
+
+    public void clear() {
+        moduleLayoutCache.clear();
+        clearEditPanel();
+        cataloguePanel.load();
     }
 
     public Catalogue getCatalogue() {
