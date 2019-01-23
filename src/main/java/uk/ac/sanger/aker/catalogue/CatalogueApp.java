@@ -152,6 +152,9 @@ public class CatalogueApp implements Runnable {
     }
 
     private void saveCatalogueAs() {
+        if (!validateForSave()) {
+            return;
+        }
         Path path = requestFilePath(filePath, FileDialog.SAVE);
         if (path==null) {
             return;
@@ -164,7 +167,7 @@ public class CatalogueApp implements Runnable {
     private void saveCatalogue() {
         if (filePath==null) {
             saveCatalogueAs();
-        } else {
+        } else if (validateForSave()) {
             savePath(filePath);
         }
     }
@@ -266,18 +269,35 @@ public class CatalogueApp implements Runnable {
         frame.view(pro);
     }
 
+    private static String htmlWrap(String body) {
+        return "<html><body style='width:300px; padding: 5px;'>" + body + "</body></html>";
+    }
+
     private void showError(String title, String message, Exception exception) {
-        String text = String.format("<html>%s<br>%s</html>", message, escapeHtml4(exception.getMessage()));
+        String text = htmlWrap(message + "<br>" + escapeHtml4(exception.getMessage()));
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
 
     private void validateCatalogue() {
         Validator validator = new Validator(frame::getModuleLayout);
         if (validator.findProblems(catalogue)) {
-            JOptionPane.showMessageDialog(frame, validator.problemsHtml(), "Problems found", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, htmlWrap(validator.problemsHtml()),
+                    "Problems found", JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(frame, "No problems found.", "Valid", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    private boolean validateForSave() {
+        Validator validator = new Validator(frame::getModuleLayout);
+        if (!validator.findProblems(catalogue)) {
+            return true;
+        }
+        String message = htmlWrap(validator.problemsHtml()
+                + "<p>Do you want to ignore these problems and save anyway?</p>");
+        int result = JOptionPane.showConfirmDialog(frame, message, "Problems found",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        return (result==JOptionPane.OK_OPTION);
     }
 
 }

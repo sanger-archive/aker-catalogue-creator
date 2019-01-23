@@ -52,7 +52,7 @@ public class Validator {
                     .filter(mod -> mod!=Module.END)
                     .collect(Collectors.toSet());
             ModuleLayout layout = layoutProvider.apply(pro);
-            if (layout!=null && !proModules.containsAll(layout.modules())) {
+            if (layout!=null && !layout.modules().stream().allMatch(mod -> mod.isEndpoint() || proModules.contains(mod))) {
                 addProblem(Problem.PROCESS_WITH_DISCONNECTED_MODULES, pro);
             }
             usedModules.addAll(proModules);
@@ -77,15 +77,22 @@ public class Validator {
     }
 
     public static boolean defaultRouteValid(List<ModulePair> pairs) {
-        Map<Module, Module> defaultPath = pairs.stream()
-                .filter(ModulePair::isDefaultPath)
-                .collect(Collectors.toMap(ModulePair::getFrom, ModulePair::getTo));
+        Map<Module, Module> defaultPath = new HashMap<>(pairs.size());
+        for (ModulePair pair : pairs) {
+            if (!pair.isDefaultPath()) {
+                continue;
+            }
+            if (defaultPath.containsKey(pair.getFrom())) {
+                return false;
+            }
+            defaultPath.put(pair.getFrom(), pair.getTo());
+        }
         Module cur = Module.START;
         int length = 0;
         while (cur != Module.END) {
             cur = defaultPath.get(cur);
             length += 1;
-            if (length > defaultPath.size() || cur==null) {
+            if (cur==null || length > defaultPath.size()) {
                 return false;
             }
         }
@@ -93,7 +100,7 @@ public class Validator {
     }
 
     public String problemsHtml() {
-        StringBuilder sb = new StringBuilder("<html>");
+        StringBuilder sb = new StringBuilder();
         for (Problem problem : Problem.values()) {
             List<String> items = problems.get(problem);
             if (items.isEmpty()) {
@@ -107,7 +114,6 @@ public class Validator {
             sb.append("</ul>");
             sb.append("</p>");
         }
-        sb.append("</html>");
         return sb.toString();
     }
 
