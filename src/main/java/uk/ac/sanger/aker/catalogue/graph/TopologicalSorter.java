@@ -1,4 +1,4 @@
-package uk.ac.sanger.aker.catalogue.sorting;
+package uk.ac.sanger.aker.catalogue.graph;
 
 import java.util.*;
 import java.util.function.Function;

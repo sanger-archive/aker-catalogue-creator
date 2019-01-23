@@ -1,5 +1,6 @@
 package uk.ac.sanger.aker.catalogue.component;
 
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
 import uk.ac.sanger.aker.catalogue.model.Module;
 import uk.ac.sanger.aker.catalogue.model.ModulePair;
 

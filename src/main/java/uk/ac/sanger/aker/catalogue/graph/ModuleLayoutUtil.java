@@ -1,6 +1,5 @@
-package uk.ac.sanger.aker.catalogue.sorting;
+package uk.ac.sanger.aker.catalogue.graph;
 
-import uk.ac.sanger.aker.catalogue.component.ModuleLayout;
 import uk.ac.sanger.aker.catalogue.model.Module;
 import uk.ac.sanger.aker.catalogue.model.ModulePair;
 

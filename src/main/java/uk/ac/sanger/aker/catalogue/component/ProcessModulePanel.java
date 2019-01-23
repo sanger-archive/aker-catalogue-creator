@@ -1,8 +1,9 @@
 package uk.ac.sanger.aker.catalogue.component;
 
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayoutUtil;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
 import uk.ac.sanger.aker.catalogue.model.Module;
-import uk.ac.sanger.aker.catalogue.sorting.ModuleLayoutUtil;
 
 import javax.swing.JPanel;
 import java.awt.*;

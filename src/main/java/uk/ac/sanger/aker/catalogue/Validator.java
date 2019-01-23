@@ -1,6 +1,6 @@
 package uk.ac.sanger.aker.catalogue;
 
-import uk.ac.sanger.aker.catalogue.component.ModuleLayout;
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import java.util.*;
