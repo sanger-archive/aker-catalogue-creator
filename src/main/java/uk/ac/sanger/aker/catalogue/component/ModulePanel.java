@@ -4,7 +4,6 @@ import uk.ac.sanger.aker.catalogue.model.Module;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-
 import java.awt.*;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
@@ -45,25 +44,18 @@ public class ModulePanel extends EditPanel {
     private void layOut() {
         setLayout(new GridBagLayout());
         Insets insets = new Insets(10,0,10,0);
-        add(headlineLabel, new GridBagConstraints(0,0,2,1,0,0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0));
-        GridBagConstraints cleft = new GridBagConstraints(0,0,1,1,0,0,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 5, 0);
-        GridBagConstraints cright = new GridBagConstraints(1,0,1,1,0,0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0);
-        addRow("Name:", nameField, 1, cleft, cright);
-        addRow("Min value:", minField, 2, cleft, cright);
-        addRow("Max value:", maxField, 3, cleft, cright);
-    }
-
-    private void addRow(Object o1, Object o2, int y, GridBagConstraints cleft, GridBagConstraints cright) {
-        if (o1 instanceof String) {
-            o1 = makeLabel((String) o1);
-        }
-        cleft.gridy = y;
-        cright.gridy = y;
-        add((Component) o1, cleft);
-        add((Component) o2, cright);
+        QuickConstraints constraints = new QuickConstraints(insets);
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        add(headlineLabel, constraints);
+        insets.left = 10;
+        constraints.gridwidth = 1;
+        add("Name:", constraints.incy().left());
+        add(nameField, constraints.right());
+        add("Min value:", constraints.incy().left());
+        add(minField, constraints.right());
+        add("Max value:", constraints.incy().left());
+        add(maxField, constraints.right());
     }
 
     @Override

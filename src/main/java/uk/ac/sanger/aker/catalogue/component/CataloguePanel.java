@@ -5,11 +5,10 @@ import uk.ac.sanger.aker.catalogue.component.list.*;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.JTextField;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeHeadline;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextField;
 
 /**
  * @author dr6
@@ -51,33 +50,28 @@ public class CataloguePanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10,10,10,10);
-        add(makeHeadline("Catalogue"), new GridBagConstraints(0,0,2,1, 1.0, 0.1,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0));
+        Insets insets = new Insets(10,0,10,0);
+        QuickConstraints constraints = new QuickConstraints(0,0,2,1, 0, 0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0);
+        add(makeHeadline("Catalogue"), constraints);
 
-        add(makeLabel("Pipeline:"), new GridBagConstraints(0,1,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 0, 0));
-        add(pipelineField, new GridBagConstraints(1,1,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
+        constraints.insets.left = 10;
+        constraints.gridwidth = 1;
+        add("Pipeline:", constraints.incy().left());
+        add(pipelineField, constraints.right());
 
-        add(makeLabel("URL:"), new GridBagConstraints(0,2,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 0, 0));
-        add(urlField, new GridBagConstraints(1,2,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
+        add("URL:", constraints.incy().left());
+        add(urlField, constraints.right());
 
-        add(makeLabel("LIMS ID:"), new GridBagConstraints(0,3,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 0, 0));
-        add(limsIdField, new GridBagConstraints(1,3,1,1, 1.0, 0.1,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
+        add("LIMS ID:", constraints.incy().left());
+        add(limsIdField, constraints.right());
 
-        add(moduleList, new GridBagConstraints(0,4,2,1, 1.0, 1.0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.NONE, insets, 0, 0));
+        constraints.left();
+        constraints.gridwidth = 2;
+        add(moduleList, constraints.incy());
+        add(processList, constraints.incy());
+        add(productList, constraints.incy());
 
-        add(processList, new GridBagConstraints(0, 5, 2, 1, 1.0, 1.0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.NONE, insets, 0, 0));
-
-        add(productList, new GridBagConstraints(0, 6, 2, 1, 1.0, 1.0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.NONE, insets, 0, 0));
         setMinimumSize(getPreferredSize());
     }
 

@@ -62,40 +62,33 @@ public class ProcessPanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10, 0, 10, 0);
-        GridBagConstraints cleft = new GridBagConstraints(0, 0, 1, 1, 0, 0,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 0, 0);
-        GridBagConstraints cright = new GridBagConstraints(1, 0, 1, 1, 0, 0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0);
-        add(headlineLabel, new GridBagConstraints(0, 0, 2, 1, 0, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0));
-        addRow("Name:", nameField, 1, cleft, cright);
-        addRow("UUID:", uuidField, 2, cleft, cright);
-        addRow("TAT:", tatField, 3, cleft, cright);
-        addRow("Process class:", classField, 4, cleft, cright);
+        QuickConstraints constraints = new QuickConstraints(new Insets(10, 0, 10, 0));
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        add(headlineLabel, constraints);
+        constraints.insets.left = 10;
+        constraints.gridwidth = 1;
+        add("Name:", constraints.incy().left());
+        add(nameField, constraints.right());
+        add("UUID:", constraints.incy().left());
+        add(uuidField, constraints.right());
+        add("TAT:", constraints.incy().left());
+        add(tatField, constraints.right());
+        add("Process class:", constraints.incy().left());
+        add(classField, constraints.right());
         Box box = Box.createHorizontalBox();
         box.add(makeLabel("To add:"));
         box.add(Box.createHorizontalStrut(10));
         box.add(moduleCombo);
-        cright.anchor = GridBagConstraints.LINE_END;
+        constraints.rightAnchor = GridBagConstraints.LINE_END;
         JLabel modulesLabel = makeLabel("Modules:");
         modulesLabel.setFont(modulesLabel.getFont().deriveFont(Font.BOLD));
-        addRow(modulesLabel, box, 5, cleft, cright);
-        add(graphPanel, new GridBagConstraints(0, 6, 2, 1, 0, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
-    }
-
-    private void addRow(Object o1, Object o2, int y, GridBagConstraints cleft, GridBagConstraints cright) {
-        cleft.gridy = y;
-        cright.gridy = y;
-        if (o1 instanceof String) {
-            o1 = makeLabel((String) o1);
-        }
-        if (o2 instanceof String) {
-            o2 = makeLabel((String) o2);
-        }
-        add((Component) o1, cleft);
-        add((Component) o2, cright);
+        add(modulesLabel, constraints.incy().left());
+        add(box, constraints.right());
+        constraints.left().gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        add(graphPanel, constraints.incy());
     }
 
     public void claimFocus() {

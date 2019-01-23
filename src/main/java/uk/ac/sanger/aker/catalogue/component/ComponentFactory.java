@@ -2,9 +2,7 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import javax.swing.*;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.event.*;
-import java.util.List;
 
 /**
  * @author dr6

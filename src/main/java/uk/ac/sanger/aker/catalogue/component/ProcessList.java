@@ -35,13 +35,12 @@ public class ProcessList extends JPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10,0,10,0);
-        add(new JScrollPane(list), new GridBagConstraints(0,0,2, 1, 0,0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
-        add(combo, new GridBagConstraints(0, 1, 1, 1, 0, 0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
-        add(addButton, new GridBagConstraints(1, 1, 1, 1, 0, 0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0));
+        QuickConstraints constraints = new QuickConstraints(new Insets(10,0,10,0));
+        constraints.gridwidth = 2;
+        add(new JScrollPane(list), constraints);
+        constraints.gridwidth = 1;
+        add(combo, constraints.incy().left());
+        add(addButton, constraints.right());
     }
 
     private void fireAdd() {

@@ -57,34 +57,27 @@ public class ProductPanel extends EditPanel {
 
     private void layOut() {
         setLayout(new GridBagLayout());
-        Insets insets = new Insets(10,0,10,0);
-        GridBagConstraints cleft = new GridBagConstraints(0,0,1,1,0,0,
-                GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets, 10, 0);
-        GridBagConstraints cright = new GridBagConstraints(1,0,1,1,0,0,
-                GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0);
-        add(headlineLabel, new GridBagConstraints(0,0,2,1,0,0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0));
-        addRow("Name:", nameField, 1, cleft, cright);
-        addRow("Description:", descField, 2, cleft, cright);
-        addRow("UUID:", uuidField, 3, cleft, cright);
-        addRow("Product version:", versionField, 4, cleft, cright);
-        addRow("Availability:", availableCheckbox, 5, cleft, cright);
-        addRow("Requested bio type:", bioTypeField, 6, cleft, cright);
-        cleft.anchor = GridBagConstraints.FIRST_LINE_END;
-        addRow("Processes:", processList, 7, cleft, cright);
-    }
-
-    private void addRow(Object o1, Object o2, int y, GridBagConstraints cleft, GridBagConstraints cright) {
-        cleft.gridy = y;
-        cright.gridy = y;
-        if (o1 instanceof String) {
-            o1 = makeLabel((String) o1);
-        }
-        if (o2 instanceof String) {
-            o2 = makeLabel((String) o2);
-        }
-        add((Component) o1, cleft);
-        add((Component) o2, cright);
+        QuickConstraints constraints = new QuickConstraints(new Insets(10,0,10,0));
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridwidth = 2;
+        add(headlineLabel, constraints);
+        constraints.gridwidth = 1;
+        constraints.insets.left = 10;
+        add("Name:", constraints.incy().left());
+        add(nameField, constraints.right());
+        add("Description:", constraints.incy().left());
+        add(descField, constraints.right());
+        add("UUID:", constraints.incy().left());
+        add(uuidField, constraints.right());
+        add("Product version:", constraints.incy().left());
+        add(versionField, constraints.right());
+        add("Available:", constraints.incy().left());
+        add(availableCheckbox, constraints.right());
+        add("Requested bio type:", constraints.incy().left());
+        add(bioTypeField, constraints.right());
+        constraints.leftAnchor = GridBagConstraints.FIRST_LINE_END;
+        add("Processes:", constraints.incy().left());
+        add(processList, constraints.right());
     }
 
     private void load() {

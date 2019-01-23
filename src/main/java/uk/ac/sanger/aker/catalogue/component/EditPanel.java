@@ -3,7 +3,6 @@ package uk.ac.sanger.aker.catalogue.component;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
-import java.awt.Component;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 
@@ -30,16 +29,7 @@ abstract class EditPanel extends JPanel {
         return documentListener;
     }
 
-    protected static JPanel panelOf(Object... objects) {
-        JPanel line = new JPanel();
-        for (Object obj : objects) {
-            if (obj instanceof String) {
-                obj = makeLabel((String) obj);
-            }
-            line.add((Component) obj);
-        }
-        return line;
+    public void add(String labelText, Object constraints) {
+        add(makeLabel(labelText), constraints);
     }
-
-
 }
