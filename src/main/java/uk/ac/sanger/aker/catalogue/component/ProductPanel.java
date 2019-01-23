@@ -105,10 +105,6 @@ public class ProductPanel extends EditPanel {
         app.productsUpdated();
     }
 
-    public void claimFocus() {
-        nameField.requestFocusInWindow();
-    }
-
     @Override
     protected void updateState() {
         save();

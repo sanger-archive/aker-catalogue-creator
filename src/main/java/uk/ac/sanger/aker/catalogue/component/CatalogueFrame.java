@@ -43,9 +43,8 @@ public class CatalogueFrame extends JFrame {
         if (module==null) {
             clearEditPanel();
         } else {
-            ModulePanel modulePanel = new ModulePanel(module, cataloguePanel::modulesUpdated);
+            ModulePanel modulePanel = new ModulePanel(module, app);
             editScrollPane.setViewportView(modulePanel);
-            modulePanel.claimFocus();
         }
     }
 
@@ -55,7 +54,6 @@ public class CatalogueFrame extends JFrame {
         } else {
             ProductPanel productPanel = new ProductPanel(product, app);
             editScrollPane.setViewportView(productPanel);
-            productPanel.claimFocus();
         }
     }
 
@@ -65,12 +63,19 @@ public class CatalogueFrame extends JFrame {
         } else {
             ProcessPanel processPanel = new ProcessPanel(process, app);
             editScrollPane.setViewportView(processPanel);
-            processPanel.claimFocus();
         }
     }
 
     public void productsUpdated() {
         cataloguePanel.productsUpdated();
+    }
+
+    public void processesUpdated() {
+        cataloguePanel.processesUpdated();
+    }
+
+    public void modulesUpdated() {
+        cataloguePanel.modulesUpdated();
     }
 
     public void clearEditPanel() {

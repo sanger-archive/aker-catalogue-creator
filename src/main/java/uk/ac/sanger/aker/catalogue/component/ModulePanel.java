@@ -1,12 +1,15 @@
 package uk.ac.sanger.aker.catalogue.component;
 
+import uk.ac.sanger.aker.catalogue.CatalogueApp;
 import uk.ac.sanger.aker.catalogue.model.Module;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeHeadline;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextField;
 
 /**
  * @author dr6
@@ -19,11 +22,11 @@ public class ModulePanel extends EditPanel {
     private CheckedSpinner minField;
     private CheckedSpinner maxField;
 
-    private Runnable updateAction;
+    private CatalogueApp app;
 
-    public ModulePanel(Module module, Runnable updateAction) {
+    public ModulePanel(Module module, CatalogueApp app) {
         this.module = module;
-        this.updateAction = updateAction;
+        this.app = app;
         initComponents();
         layOut();
         updateState();
@@ -71,18 +74,6 @@ public class ModulePanel extends EditPanel {
         module.setMinValue(minField.getValue());
         module.setMaxValue(maxField.getValue());
         headlineLabel.setText("Module: "+module.getName());
-        updateAction.run();
-    }
-
-    public void claimFocus() {
-        nameField.requestFocusInWindow();
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(new ModulePanel(new Module("Fizzywhig"), frame::dispose));
-        frame.pack();
-        frame.setVisible(true);
+        app.modulesUpdated();
     }
 }

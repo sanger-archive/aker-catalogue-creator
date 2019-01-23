@@ -91,4 +91,8 @@ public class CataloguePanel extends EditPanel {
     public void productsUpdated() {
         productList.repaint();
     }
+
+    public void processesUpdated() {
+        processList.repaint();
+    }
 }

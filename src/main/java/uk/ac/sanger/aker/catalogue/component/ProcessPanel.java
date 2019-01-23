@@ -34,18 +34,19 @@ public class ProcessPanel extends EditPanel {
 
     @Override
     protected void updateState() {
-        process.setName(nameField.getText());
-        headlineLabel.setText("Process: "+process.getName());
-        process.setTat((int) tatField.getValue());
-        process.setProcessClass(classField.getText());
+        save();
     }
+
 
     private void initComponents() {
         headlineLabel = makeHeadline("Process");
         nameField = makeTextField();
+        nameField.getDocument().addDocumentListener(getDocumentListener());
         uuidField = new UuidField(process);
         tatField = makeSpinner(0, 0);
+        tatField.addChangeListener(getChangeListener());
         classField = makeTextField();
+        classField.getDocument().addDocumentListener(getDocumentListener());
         graphPanel = new ProcessModulePanel(app.getFrame(), process, this);
         moduleCombo = makeCombo(app.getCatalogue().getModules().toArray(new Module[0]));
         moduleCombo.setRenderer(new ListNameRenderer());
@@ -58,6 +59,14 @@ public class ProcessPanel extends EditPanel {
         tatField.setValue(process.getTat());
         classField.setText(process.getProcessClass());
         uuidField.setText(process.getUuid());
+    }
+
+    private void save() {
+        process.setName(nameField.getText());
+        headlineLabel.setText("Process: "+process.getName());
+        process.setTat((int) tatField.getValue());
+        process.setProcessClass(classField.getText());
+        app.processesUpdated();
     }
 
     private void layOut() {
@@ -87,10 +96,6 @@ public class ProcessPanel extends EditPanel {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         add(graphPanel, constraints.incy());
-    }
-
-    public void claimFocus() {
-        nameField.requestFocusInWindow();
     }
 
     public Module getModuleToAdd() {

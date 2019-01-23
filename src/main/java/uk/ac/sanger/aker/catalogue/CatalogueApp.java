@@ -86,6 +86,12 @@ public class CatalogueApp implements Runnable {
     public void productsUpdated() {
         frame.productsUpdated();
     }
+    public void modulesUpdated() {
+        frame.modulesUpdated();
+    }
+    public void processesUpdated() {
+        frame.processesUpdated();
+    }
 
     public void clearEditPanel() {
         frame.clearEditPanel();

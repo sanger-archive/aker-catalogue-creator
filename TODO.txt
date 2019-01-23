@@ -1,5 +1,4 @@
 Menus
-Dry layouts
 Explicit loading and saving
 Validate
 Replace all UUIDs
