@@ -45,4 +45,8 @@ public class ModuleLayout {
     public void retainModules(Set<Module> modules) {
         positions.keySet().retainAll(modules);
     }
+
+    public Set<Module> modules() {
+        return positions.keySet();
+    }
 }

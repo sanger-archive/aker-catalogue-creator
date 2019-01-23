@@ -1,4 +1,5 @@
-Validate (before saving)
+Validate before saving
+Key shortcuts
 Option to replace all UUIDs
 Deploying
 Expanding graph where necessary

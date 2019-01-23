@@ -32,6 +32,7 @@ public class CatalogueApp implements Runnable {
     private Action saveAsAction;
     private Action copyModuleMapAction;
     private Action pasteModuleMapAction;
+    private Action validateAction;
     private final FilenameFilter filenameFilter = (dir, name) -> endsWithIgnoreCase(name, EXTENSION);
     private Path filePath;
 
@@ -63,6 +64,7 @@ public class CatalogueApp implements Runnable {
         saveAction = new RunnableAction("Save", this::saveCatalogue);
         saveAsAction = new RunnableAction("Save as...", this::saveCatalogueAs);
         openAction = new RunnableAction("Open...", this::openCatalogue);
+        validateAction = new RunnableAction("Validate", this::validateCatalogue);
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
     }
@@ -71,9 +73,12 @@ public class CatalogueApp implements Runnable {
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(newAction);
         fileMenu.add(openAction);
+        fileMenu.addSeparator();
         fileMenu.add(saveAction);
         fileMenu.add(saveAsAction);
         JMenu editMenu = new JMenu("Edit");
+        editMenu.add(validateAction);
+        editMenu.addSeparator();
         editMenu.add(copyModuleMapAction);
         editMenu.add(pasteModuleMapAction);
 
@@ -127,6 +132,7 @@ public class CatalogueApp implements Runnable {
 
     private void newCatalogue() {
         catalogue = new Catalogue();
+        filePath = null;
         frame.clear();
     }
 
@@ -263,6 +269,15 @@ public class CatalogueApp implements Runnable {
     private void showError(String title, String message, Exception exception) {
         String text = String.format("<html>%s<br>%s</html>", message, escapeHtml4(exception.getMessage()));
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void validateCatalogue() {
+        Validator validator = new Validator(frame::getModuleLayout);
+        if (validator.findProblems(catalogue)) {
+            JOptionPane.showMessageDialog(frame, validator.problemsHtml(), "Problems found", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(frame, "No problems found.", "Valid", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
 }
