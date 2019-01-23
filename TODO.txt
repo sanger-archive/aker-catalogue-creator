@@ -1,7 +1,5 @@
-Menus
-Explicit loading and saving
-Validate
-Replace all UUIDs
+Validate (before saving)
+Option to replace all UUIDs
 Deploying
 Expanding graph where necessary
 (Undo?)

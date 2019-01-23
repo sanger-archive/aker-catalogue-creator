@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +46,12 @@ public class ListComponent<E extends HasName> extends JPanel implements ListSele
         registerDelete(list, this::fireDelete);
 
         list.addListSelectionListener(this);
+        list.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                listActor.select(singleSelectedItem());
+            }
+        });
     }
 
     private void addNew() {

@@ -45,8 +45,8 @@ public class JsonExporter extends JsonOutput {
 
             pairArrayBuilder.add(
                     createObjectBuilder()
-                            .add("from_step", fromMod.serialisationName())
-                            .add("to_step", toMod.serialisationName())
+                            .add("from_step", nullable(fromMod.serialisationName()))
+                            .add("to_step", nullable(toMod.serialisationName()))
                             .add("default_path", pair.isDefaultPath())
             );
 
@@ -54,8 +54,8 @@ public class JsonExporter extends JsonOutput {
                 paramArrayBuilder.add(
                         createObjectBuilder()
                                 .add("name", toMod.getName())
-                                .add("min_value", toMod.getMinValue())
-                                .add("max_value", toMod.getMaxValue())
+                                .add("min_value", nullable(toMod.getMinValue()))
+                                .add("max_value", nullable(toMod.getMaxValue()))
                 );
             }
         }

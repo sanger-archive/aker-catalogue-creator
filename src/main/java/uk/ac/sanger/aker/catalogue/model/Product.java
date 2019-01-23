@@ -8,7 +8,7 @@ import java.util.*;
 public class Product implements HasName, HasUuid {
     private String name;
     private String uuid;
-    private String description;
+    private String description = "";
     private int productVersion = 1;
     private int availability = 1;
     private String bioType = "dna/rna";

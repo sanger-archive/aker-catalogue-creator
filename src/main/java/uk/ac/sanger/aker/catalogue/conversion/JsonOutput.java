@@ -41,4 +41,12 @@ public class JsonOutput {
             out.write(value);
         }
     }
+
+    public static JsonValue nullable(String string) {
+        return (string==null ? JsonValue.NULL : Json.createValue(string));
+    }
+
+    public static JsonValue nullable(Integer number) {
+        return (number==null ? JsonValue.NULL : Json.createValue(number));
+    }
 }
