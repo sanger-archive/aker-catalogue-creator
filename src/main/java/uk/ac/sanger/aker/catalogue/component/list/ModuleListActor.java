@@ -48,7 +48,7 @@ public class ModuleListActor implements ListActor<Module> {
     }
 
     @Override
-    public void open(Module item) {
+    public void select(Module item) {
         app.view(item);
     }
 }

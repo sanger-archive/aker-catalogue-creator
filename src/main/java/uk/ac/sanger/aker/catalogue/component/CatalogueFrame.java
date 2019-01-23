@@ -40,21 +40,33 @@ public class CatalogueFrame extends JFrame {
     }
 
     public void view(Module module) {
-        ModulePanel modulePanel = new ModulePanel(module, cataloguePanel::modulesUpdated);
-        editScrollPane.setViewportView(modulePanel);
-        modulePanel.claimFocus();
+        if (module==null) {
+            clearEditPanel();
+        } else {
+            ModulePanel modulePanel = new ModulePanel(module, cataloguePanel::modulesUpdated);
+            editScrollPane.setViewportView(modulePanel);
+            modulePanel.claimFocus();
+        }
     }
 
     public void view(Product product) {
-        ProductPanel productPanel = new ProductPanel(product, app);
-        editScrollPane.setViewportView(productPanel);
-        productPanel.claimFocus();
+        if (product==null) {
+            clearEditPanel();
+        } else {
+            ProductPanel productPanel = new ProductPanel(product, app);
+            editScrollPane.setViewportView(productPanel);
+            productPanel.claimFocus();
+        }
     }
 
     public void view(AkerProcess process) {
-        ProcessPanel processPanel = new ProcessPanel(process, app);
-        editScrollPane.setViewportView(processPanel);
-        processPanel.claimFocus();
+        if (process==null) {
+            clearEditPanel();
+        } else {
+            ProcessPanel processPanel = new ProcessPanel(process, app);
+            editScrollPane.setViewportView(processPanel);
+            processPanel.claimFocus();
+        }
     }
 
     public void productsUpdated() {

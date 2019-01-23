@@ -69,14 +69,17 @@ public class CatalogueApp implements Runnable {
     }
 
     public void view(Module module) {
+        copyModuleMapAction.setEnabled(false);
         frame.view(module);
     }
 
     public void view(Product product) {
+        copyModuleMapAction.setEnabled(false);
         frame.view(product);
     }
 
     public void view(AkerProcess process) {
+        copyModuleMapAction.setEnabled(process!=null);
         frame.view(process);
     }
 

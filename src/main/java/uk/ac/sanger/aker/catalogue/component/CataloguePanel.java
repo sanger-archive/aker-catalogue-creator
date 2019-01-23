@@ -79,8 +79,6 @@ public class CataloguePanel extends EditPanel {
         add(productList, new GridBagConstraints(0, 6, 2, 1, 1.0, 1.0,
                 GridBagConstraints.PAGE_START, GridBagConstraints.NONE, insets, 0, 0));
         setMinimumSize(getPreferredSize());
-
-        processList.addSelectionListener(e -> app.processSelectionChanged());
     }
 
     @Override

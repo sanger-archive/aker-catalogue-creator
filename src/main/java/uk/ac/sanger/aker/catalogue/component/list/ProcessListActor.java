@@ -44,7 +44,7 @@ public class ProcessListActor implements ListActor<AkerProcess> {
     }
 
     @Override
-    public void open(AkerProcess item) {
+    public void select(AkerProcess item) {
         app.view(item);
     }
 }

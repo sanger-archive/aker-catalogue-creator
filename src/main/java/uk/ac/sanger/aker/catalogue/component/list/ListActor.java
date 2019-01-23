@@ -8,5 +8,5 @@ public interface ListActor<E> {
     E getPrototype();
     E getNew();
     List<E> delete(Collection<? extends E> items);
-    void open(E item);
+    void select(E item);
 }

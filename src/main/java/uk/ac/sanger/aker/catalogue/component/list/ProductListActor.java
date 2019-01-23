@@ -37,7 +37,7 @@ public class ProductListActor implements ListActor<Product> {
     }
 
     @Override
-    public void open(Product item) {
+    public void select(Product item) {
         app.view(item);
     }
 }
