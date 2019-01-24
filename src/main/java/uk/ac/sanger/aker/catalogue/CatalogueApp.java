@@ -33,6 +33,7 @@ public class CatalogueApp implements Runnable {
     private Action copyModuleMapAction;
     private Action pasteModuleMapAction;
     private Action validateAction;
+    private Action allUuidsAction;
     private final FilenameFilter filenameFilter = (dir, name) -> endsWithIgnoreCase(name, EXTENSION);
     private Path filePath;
 
@@ -65,6 +66,7 @@ public class CatalogueApp implements Runnable {
         saveAsAction = new RunnableAction("Save as...", this::saveCatalogueAs);
         openAction = new RunnableAction("Open...", this::openCatalogue);
         validateAction = new RunnableAction("Validate", this::validateCatalogue);
+        allUuidsAction = new RunnableAction("Generate all new UUIDs", () -> fillInUuids(catalogue, true));
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
 
@@ -83,6 +85,8 @@ public class CatalogueApp implements Runnable {
         fileMenu.add(saveAsAction);
         JMenu editMenu = new JMenu("Edit");
         editMenu.add(validateAction);
+        editMenu.addSeparator();
+        editMenu.add(allUuidsAction);
         editMenu.addSeparator();
         editMenu.add(copyModuleMapAction);
         editMenu.add(pasteModuleMapAction);
@@ -191,7 +195,7 @@ public class CatalogueApp implements Runnable {
     }
 
     private boolean savePath(Path path) {
-        fillInMissingUuids(catalogue);
+        fillInUuids(catalogue, false);
         JsonExporter jex = new JsonExporter();
         try {
             jex.write(jex.toExportData(catalogue), path);
@@ -203,11 +207,11 @@ public class CatalogueApp implements Runnable {
         return true;
     }
 
-    private void fillInMissingUuids(Catalogue catalogue) {
+    private void fillInUuids(Catalogue catalogue, final boolean force) {
         Stream.<HasUuid>concat(catalogue.getProcesses().stream(), catalogue.getProducts().stream())
                 .forEach(item -> {
                     String uuid = item.getUuid();
-                    if (uuid==null || uuid.isEmpty()) {
+                    if (force || uuid==null || uuid.isEmpty()) {
                         item.setUuid(UUID.randomUUID().toString());
                     }
                 });
