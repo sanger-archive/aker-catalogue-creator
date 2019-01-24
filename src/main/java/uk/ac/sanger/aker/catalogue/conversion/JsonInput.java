@@ -43,7 +43,7 @@ public class JsonInput {
 
     protected Integer integerFrom(JsonObject jo, String key) throws IOException {
         JsonValue value = jo.get(key);
-        if (value==null) {
+        if (value==null || value.getValueType()==ValueType.NULL) {
             return null;
         }
         return toInt(value, key);
