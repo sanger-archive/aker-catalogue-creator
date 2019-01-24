@@ -298,7 +298,8 @@ public class ModuleGraph {
 
     public boolean addModule(Module module, int x, int y) {
         if (position(module)!=null) {
-            return false;
+            select(module);
+            return true;
         }
         int miny = position(Module.START).y;
         int maxy = position(Module.END).y;

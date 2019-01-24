@@ -1,3 +1,4 @@
-Expanding graph where necessary
+Track unsaved changes
 Deploying
 (Undo?)
+(Better graph resizing?)

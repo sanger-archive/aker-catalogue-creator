@@ -5,6 +5,7 @@ import uk.ac.sanger.aker.catalogue.graph.ModuleLayoutUtil;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
 import uk.ac.sanger.aker.catalogue.model.Module;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -67,12 +68,13 @@ public class ProcessModulePanel extends JPanel {
                 repaint();
             }
         });
+        setBorder(BorderFactory.createLineBorder(Color.lightGray));
     }
 
     private ModuleLayout getModuleLayout() {
         ModuleLayout layout = frame.getModuleLayout(process);
         if (layout==null) {
-            layout = ModuleLayoutUtil.layOut(process.getModulePairs(), 160, 100);
+            layout = ModuleLayoutUtil.layOut(process.getModulePairs(), 160, 80);
             frame.saveModuleLayout(process, layout);
         }
         return layout;
@@ -99,10 +101,6 @@ public class ProcessModulePanel extends JPanel {
         graphBounds = new Rectangle(centreX - width/2, centreY - height/2, width, height);
     }
 
-    public void recheckSize() {
-        // TODO
-    }
-
     @Override
     public Dimension getPreferredSize() {
         if (graphBounds==null) {
@@ -118,7 +116,7 @@ public class ProcessModulePanel extends JPanel {
         try {
             showHints(g);
             int x0 = (getWidth() - graphBounds.width)/2 - graphBounds.x;
-            int y0 = (getHeight() - graphBounds.height)/2 - graphBounds.y;
+            int y0 = (getHeight() - graphBounds.height)/2 - graphBounds.y + 8;
             mouseControl.setOrigin(x0, y0);
             g2.translate(x0, y0);
             graph.draw((Graphics2D) g2);
@@ -131,10 +129,10 @@ public class ProcessModulePanel extends JPanel {
         Set<Hint> hints = getHints();
         g.setColor(Color.gray);
         FontMetrics fm = g.getFontMetrics();
-        int y = fm.getMaxAscent();
-        int h = y + fm.getMaxDescent();
+        int y = fm.getMaxAscent() + 8;
+        int h = y + fm.getMaxDescent() - 8;
         for (Hint hint : hints) {
-            g.drawString(hint.toString(), 2, y);
+            g.drawString(hint.toString(), 10, y);
             y += h;
         }
     }
