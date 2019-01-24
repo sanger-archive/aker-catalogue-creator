@@ -45,8 +45,8 @@ public class CatalogueApp implements Runnable {
             e.printStackTrace();
             catalogue = new Catalogue();
         }
-        createActions();
         createFrame();
+        createActions();
         frame.setJMenuBar(createMenuBar());
         frame.setVisible(true);
     }
@@ -67,6 +67,11 @@ public class CatalogueApp implements Runnable {
         validateAction = new RunnableAction("Validate", this::validateCatalogue);
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
+
+        KeyShortcuts.NEW.register(frame, newAction);
+        KeyShortcuts.OPEN.register(frame, openAction);
+        KeyShortcuts.SAVE.register(frame, saveAction);
+        KeyShortcuts.SAVE_AS.register(frame, saveAsAction);
     }
 
     private JMenuBar createMenuBar() {

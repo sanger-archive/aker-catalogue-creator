@@ -4,11 +4,11 @@ import uk.ac.sanger.aker.catalogue.model.AkerProcess;
 import uk.ac.sanger.aker.catalogue.model.Product;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
-import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.registerDelete;
 
 /**
  * @author dr6
@@ -30,7 +30,7 @@ public class ProcessList extends JPanel {
 
         layOut();
 
-        registerDelete(list, this::fireDelete);
+        KeyShortcuts.DELETE.register(list, e -> fireDelete());
     }
 
     private void layOut() {

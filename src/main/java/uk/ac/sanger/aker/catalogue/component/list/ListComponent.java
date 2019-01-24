@@ -1,5 +1,6 @@
 package uk.ac.sanger.aker.catalogue.component.list;
 
+import uk.ac.sanger.aker.catalogue.component.KeyShortcuts;
 import uk.ac.sanger.aker.catalogue.component.ListNameRenderer;
 import uk.ac.sanger.aker.catalogue.model.HasName;
 
@@ -13,7 +14,8 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
+import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 
 /**
  * @author dr6
@@ -43,7 +45,7 @@ public class ListComponent<E extends HasName> extends JPanel implements ListSele
         add(scrollPane, new GridBagConstraints(1, 0, 1, 3, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
 
-        registerDelete(list, this::fireDelete);
+        KeyShortcuts.DELETE.register(list, e -> fireDelete());
 
         list.addListSelectionListener(this);
         list.addFocusListener(new FocusAdapter() {

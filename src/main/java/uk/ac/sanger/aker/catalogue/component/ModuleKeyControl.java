@@ -1,6 +1,5 @@
 package uk.ac.sanger.aker.catalogue.component;
 
-import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.registerDelete;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.registerEnter;
 
 /**
@@ -11,8 +10,8 @@ public class ModuleKeyControl {
 
     public ModuleKeyControl(ProcessModulePanel panel) {
         this.panel = panel;
-        registerDelete(panel, this::fireDelete);
-        registerEnter(panel, this::fireEnter);
+        KeyShortcuts.DELETE.register(panel, e -> fireDelete());
+        registerEnter(panel, e -> fireEnter());
     }
 
     private ModuleGraph getGraph() {

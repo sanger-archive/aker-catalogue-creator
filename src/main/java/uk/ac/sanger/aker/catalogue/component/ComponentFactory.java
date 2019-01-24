@@ -58,26 +58,9 @@ public class ComponentFactory {
         return combo;
     }
 
-    public static Action registerDelete(JComponent component, Runnable runnable) {
-        return registerDelete(component, new RunnableAction(runnable));
-    }
-
-    public static Action registerDelete(JComponent component, Action action) {
-        component.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+    public static void registerEnter(JComponent component, ActionListener actionListener) {
+        component.registerKeyboardAction(actionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
                 JComponent.WHEN_FOCUSED);
-        component.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
-                JComponent.WHEN_FOCUSED);
-        return action;
-    }
-
-    public static Action registerEnter(JComponent component, Runnable runnable) {
-        return registerEnter(component, new RunnableAction(runnable));
-    }
-
-    public static Action registerEnter(JComponent component, Action action ) {
-        component.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                JComponent.WHEN_FOCUSED);
-        return action;
     }
 
     public static class RunnableAction extends AbstractAction {
@@ -86,9 +69,6 @@ public class ComponentFactory {
         public RunnableAction(String name, Runnable runnable) {
             super(name);
             this.runnable = runnable;
-        }
-        public RunnableAction(Runnable runnable) {
-            this(null, runnable);
         }
         @Override
         public void actionPerformed(ActionEvent e) {
