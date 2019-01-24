@@ -97,7 +97,7 @@ public class ModuleMouseControl extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (getGraph().anySelected()) {
-            panel.updateDimension();
+            panel.recheckSize();
         }
         if (heldButton==Button.RIGHT) {
             ModuleGraph graph = getGraph();

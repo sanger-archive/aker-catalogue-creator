@@ -20,7 +20,7 @@ public class ProcessModulePanel extends JPanel {
         DEL_ROUTE("DEL", "delete selected route"),
         ADD_MODULE("Double click", "Add module"),
         SELECT("Left click", "Select module or route"),
-        ADD_ROUTE("Right drag", "Add new route"),
+        ADD_ROUTE("Right drag down from module", "Add new route"),
         TOGGLE_DEFAULT("Shift-click", "toggle route default"),
         DRAG_MODULE("Drag", "move module"),
         ;
@@ -43,7 +43,7 @@ public class ProcessModulePanel extends JPanel {
     private AkerProcess process;
     private ModuleGraph graph;
     private ModuleMouseControl mouseControl;
-    private Dimension prefDim;
+    private Rectangle graphBounds;
 
     public ProcessModulePanel(CatalogueFrame frame, AkerProcess process, ProcessPanel processPanel) {
         this.frame = frame;
@@ -78,7 +78,7 @@ public class ProcessModulePanel extends JPanel {
         return layout;
     }
 
-    public void updateDimension() {
+    public void updateBounds() {
         ModuleLayout layout = getModuleLayout();
         Point start = layout.get(Module.START);
         int minx = start.x;
@@ -87,22 +87,28 @@ public class ProcessModulePanel extends JPanel {
         int maxy = start.y;
         for (Map.Entry<Module, Point> entry : getModuleLayout().entries()) {
             Point pos = entry.getValue();
-            int x = pos.x;
-            int y = pos.y;
-            minx = Math.min(x, minx);
-            maxx = Math.max(x, maxx);
-            miny = Math.min(y, miny);
-            maxy = Math.max(y, maxy);
+            minx = Math.min(pos.x, minx);
+            maxx = Math.max(pos.x, maxx);
+            miny = Math.min(pos.y, miny);
+            maxy = Math.max(pos.y, maxy);
         }
-        prefDim = new Dimension(maxx-minx + 130, maxy-miny + 130);
+        int centreX = (minx + maxx)/2;
+        int centreY = (miny + maxy)/2;
+        int width = Math.max(300, maxx - minx + ModuleGraph.MODULE_WIDTH + 80);
+        int height = Math.max(300, maxy - miny + ModuleGraph.MODULE_HEIGHT + 80);
+        graphBounds = new Rectangle(centreX - width/2, centreY - height/2, width, height);
+    }
+
+    public void recheckSize() {
+        // TODO
     }
 
     @Override
     public Dimension getPreferredSize() {
-        if (prefDim==null) {
-            updateDimension();
+        if (graphBounds==null) {
+            updateBounds();
         }
-        return prefDim;
+        return graphBounds.getSize();
     }
 
     @Override
@@ -111,8 +117,8 @@ public class ProcessModulePanel extends JPanel {
         Graphics g2 = g.create();
         try {
             showHints(g);
-            int x0 = getWidth()/2;
-            int y0 = ModuleGraph.MODULE_HEIGHT;
+            int x0 = (getWidth() - graphBounds.width)/2 - graphBounds.x;
+            int y0 = (getHeight() - graphBounds.height)/2 - graphBounds.y;
             mouseControl.setOrigin(x0, y0);
             g2.translate(x0, y0);
             graph.draw((Graphics2D) g2);
