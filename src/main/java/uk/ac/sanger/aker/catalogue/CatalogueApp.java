@@ -9,7 +9,6 @@ import uk.ac.sanger.aker.catalogue.model.*;
 import javax.swing.*;
 import java.awt.FileDialog;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -39,13 +38,7 @@ public class CatalogueApp implements Runnable {
 
     @Override
     public void run() {
-        JsonImporter jim = new JsonImporter();
-        try {
-            catalogue = jim.importCatalogue(jim.readPath(Paths.get("/Users/dr6/Desktop/new_catalogue.json")));
-        } catch (IOException e) {
-            e.printStackTrace();
-            catalogue = new Catalogue();
-        }
+        catalogue = new Catalogue();
         createFrame();
         createActions();
         frame.setJMenuBar(createMenuBar());
