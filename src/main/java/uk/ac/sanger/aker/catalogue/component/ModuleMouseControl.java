@@ -4,7 +4,8 @@ import uk.ac.sanger.aker.catalogue.model.Module;
 import uk.ac.sanger.aker.catalogue.model.ModulePair;
 
 import javax.swing.SwingUtilities;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author dr6
@@ -50,6 +51,9 @@ public class ModuleMouseControl extends MouseAdapter {
         if (module==null) {
             ModulePair pair = graph.pathAt(lastX, lastY);
             graph.selectPair(pair);
+            if (pair != null && e.isShiftDown()) {
+                pair.setDefaultPath(!pair.isDefaultPath());
+            }
         }
         panel.repaint();
     }
@@ -98,7 +102,7 @@ public class ModuleMouseControl extends MouseAdapter {
         if (heldButton==Button.RIGHT) {
             ModuleGraph graph = getGraph();
             if (graph.hasProjectedPath()) {
-                graph.releaseProjectedPath();
+                graph.releaseProjectedPath(e.isShiftDown());
                 panel.repaint();
             }
         }
@@ -107,7 +111,7 @@ public class ModuleMouseControl extends MouseAdapter {
 
     private static Button getButton(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)) {
-            return isCtrlHeld(e) ? Button.RIGHT : Button.LEFT;
+            return e.isControlDown() ? Button.RIGHT : Button.LEFT;
         }
         if (SwingUtilities.isRightMouseButton(e)) {
             return Button.RIGHT;
@@ -115,7 +119,4 @@ public class ModuleMouseControl extends MouseAdapter {
         return null;
     }
 
-    private static boolean isCtrlHeld(MouseEvent e) {
-        return ((e.getModifiers() & InputEvent.CTRL_MASK)!=0);
-    }
 }

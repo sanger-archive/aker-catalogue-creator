@@ -141,10 +141,10 @@ public class ModuleGraph {
         return (selected!=null && projectedTarget!=null);
     }
 
-    public void releaseProjectedPath() {
+    public void releaseProjectedPath(boolean defaultPath) {
         if (isPathStrong()) {
             Module target = moduleAt(projectedTarget.x, projectedTarget.y);
-            selectedPair = new ModulePair(selected, target, false);
+            selectedPair = new ModulePair(selected, target, defaultPath);
             pairs.add(selectedPair);
             selected = null;
         }
@@ -169,10 +169,6 @@ public class ModuleGraph {
 
     public boolean anyPairSelected() {
         return (this.selectedPair!=null);
-    }
-
-    public ModulePair getSelectedPair() {
-        return this.selectedPair;
     }
 
     private boolean isPathStrong() {
@@ -218,12 +214,6 @@ public class ModuleGraph {
         if (selectedPair!=null) {
             pairs.remove(selectedPair);
             selectedPair = null;
-        }
-    }
-
-    public void editSelectedPair() {
-        if (selectedPair!=null) {
-            selectedPair.setDefaultPath(!selectedPair.isDefaultPath());
         }
     }
 

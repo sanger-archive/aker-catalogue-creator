@@ -1,5 +1,3 @@
-Key shortcuts
-Shift click to defaulticate paths
 Option to replace all UUIDs
 Deploying
 Expanding graph where necessary

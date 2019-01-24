@@ -18,11 +18,11 @@ public class ProcessModulePanel extends JPanel {
     enum Hint {
         DEL_MODULE("DEL", "delete selected module"),
         DEL_ROUTE("DEL", "delete selected route"),
-        MAKE_DEFAULT("ENTER", "make route default"),
-        MAKE_NOT_DEFAULT("ENTER", "make route not default"),
         ADD_MODULE("Double click", "Add module"),
         SELECT("Left click", "Select module or route"),
         ADD_ROUTE("Right drag", "Add new route"),
+        TOGGLE_DEFAULT("Shift-click", "toggle route default"),
+        DRAG_MODULE("Drag", "move module"),
         ;
 
         private final String command, desc;
@@ -53,7 +53,7 @@ public class ProcessModulePanel extends JPanel {
         mouseControl = new ModuleMouseControl(this);
         addMouseListener(mouseControl);
         addMouseMotionListener(mouseControl);
-        new ModuleKeyControl(this);
+        KeyShortcuts.DELETE.register(this, e -> fireDelete());
         graph = new ModuleGraph(getModuleLayout(), process.getModulePairs());
         setFocusable(true);
         addFocusListener(new FocusAdapter() {
@@ -136,17 +136,14 @@ public class ProcessModulePanel extends JPanel {
     private Set<Hint> getHints() {
         ModuleGraph graph = getGraph();
         if (graph.anySelected() && hasFocus()) {
-            return EnumSet.of(Hint.DEL_MODULE);
+            return EnumSet.of(Hint.DEL_MODULE, Hint.DRAG_MODULE);
         }
         if (graph.anyPairSelected() && hasFocus()) {
-            if (graph.getSelectedPair().isDefaultPath()) {
-                return EnumSet.of(Hint.DEL_ROUTE, Hint.MAKE_NOT_DEFAULT);
-            }
-            return EnumSet.of(Hint.DEL_ROUTE, Hint.MAKE_DEFAULT);
+            return EnumSet.of(Hint.DEL_ROUTE, Hint.TOGGLE_DEFAULT);
         }
         Module module = getModuleToAdd();
         if (module!=null && !graph.hasModule(module)) {
-            return EnumSet.of(Hint.ADD_MODULE, Hint.SELECT, Hint.ADD_ROUTE);
+            return EnumSet.of(Hint.ADD_MODULE, Hint.SELECT);
         }
         return EnumSet.of(Hint.SELECT, Hint.ADD_ROUTE);
     }
@@ -161,5 +158,16 @@ public class ProcessModulePanel extends JPanel {
 
     public void clearModuleToAdd() {
         processPanel.clearModuleToAdd();
+    }
+
+    private void fireDelete() {
+        ModuleGraph graph = getGraph();
+        if (graph.anySelected()) {
+            graph.deleteSelected();
+            repaint();
+        } else if (graph.anyPairSelected()) {
+            graph.deleteSelectedPair();
+            repaint();
+        }
     }
 }

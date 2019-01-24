@@ -2,7 +2,8 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import javax.swing.*;
 import java.awt.Font;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author dr6
@@ -56,11 +57,6 @@ public class ComponentFactory {
         JComboBox<E> combo = new JComboBox<>(model);
         combo.setSelectedItem(null);
         return combo;
-    }
-
-    public static void registerEnter(JComponent component, ActionListener actionListener) {
-        component.registerKeyboardAction(actionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                JComponent.WHEN_FOCUSED);
     }
 
     public static class RunnableAction extends AbstractAction {
