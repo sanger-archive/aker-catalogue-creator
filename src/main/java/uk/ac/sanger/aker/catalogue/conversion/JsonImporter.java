@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author dr6
  */
 public class JsonImporter extends JsonInput {
-    private enum PairPosition { FROM, TO };
+    private enum PairPosition { FROM, TO }
 
     public Catalogue importCatalogue(JsonValue jsonValue) throws IOException {
         Objects.requireNonNull(jsonValue, "jsonValue is null");
@@ -71,17 +71,19 @@ public class JsonImporter extends JsonInput {
                 Module fromMod = getModule(fromName, modules, moduleNames, PairPosition.FROM);
                 modulePairs.add(new ModulePair(fromMod, toMod, defaultPath));
             }
-            for (JsonObject paramData : iterObjects(proData, "module_parameters")) {
-                String name = stringFrom(paramData, "name");
-                Integer minValue = integerFrom(paramData, "min_value");
-                Integer maxValue = integerFrom(paramData, "max_value");
-                if (minValue!=null || maxValue!=null) {
-                    Module module = moduleNames.get(name);
-                    if (module==null) {
-                        throw exception("Param given for unlisted module: "+name);
+            if (proData.containsKey("module_parameters")) {
+                for (JsonObject paramData : iterObjects(proData, "module_parameters")) {
+                    String name = stringFrom(paramData, "name");
+                    Integer minValue = integerFrom(paramData, "min_value");
+                    Integer maxValue = integerFrom(paramData, "max_value");
+                    if (minValue != null || maxValue != null) {
+                        Module module = moduleNames.get(name);
+                        if (module == null) {
+                            throw exception("Param given for unlisted module: " + name);
+                        }
+                        module.setMinValue(minValue);
+                        module.setMaxValue(maxValue);
                     }
-                    module.setMinValue(minValue);
-                    module.setMaxValue(maxValue);
                 }
             }
             pro.setModulePairs(modulePairs);
