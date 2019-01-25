@@ -35,10 +35,10 @@ public class TopoligicalSortTest {
         sorter.setRelations(Arrays.stream(relations)::iterator, arr -> arr[0], arr -> arr[1]);
         IllegalArgumentException ex = null;
         try {
-            List<String> sorted = sorter.sort();
+            sorter.sort();
         } catch (IllegalArgumentException e) {
             ex = e;
         }
-        assertNotNull(ex);
+        assertNotNull(ex, "An exception should have been thrown.");
     }
 }
