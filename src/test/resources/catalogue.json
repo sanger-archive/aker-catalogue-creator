@@ -1,0 +1,189 @@
+{
+  "catalogue": {
+    "pipeline": "My pipeline",
+    "url": "http://localhost:3400",
+    "lims_id": "The LIMS",
+    "processes": [
+      {
+        "name": "Quality Control (GBS)",
+        "uuid": "16a0c919-0f7e-4e23-a2e0-915bb29fcc1d",
+        "TAT": 5,
+        "process_class": "genotyping",
+        "module_parameters": [],
+        "process_module_pairings": [
+          {
+            "from_step": null,
+            "to_step": "Quantification",
+            "default_path": true
+          },
+          {
+            "from_step": null,
+            "to_step": "Fluidigm",
+            "default_path": false
+          },
+          {
+            "from_step": "Quantification",
+            "to_step": null,
+            "default_path": false
+          },
+          {
+            "from_step": "Quantification",
+            "to_step": "Fluidigm",
+            "default_path": true
+          },
+          {
+            "from_step": "Fluidigm",
+            "to_step": null,
+            "default_path": true
+          }
+        ]
+      },
+      {
+        "name": "20x Human Whole Genome Sequencing (HWGS)",
+        "uuid": "2dee6168-d310-4005-9c45-904ace2c6295",
+        "TAT": 42,
+        "process_class": "sequencing",
+        "module_parameters": [
+          {
+            "name": "Multiplex pooling",
+            "min_value": 2,
+            "max_value": 96
+          },
+          {
+            "name": "HiSeq X",
+            "min_value": 0,
+            "max_value": null
+          }
+        ],
+        "process_module_pairings": [
+          {
+            "from_step": null,
+            "to_step": "Singleplex pooling",
+            "default_path": false
+          },
+          {
+            "from_step": null,
+            "to_step": "Multiplex pooling",
+            "default_path": true
+          },
+          {
+            "from_step": "Singleplex pooling",
+            "to_step": "NovaSeq",
+            "default_path": false
+          },
+          {
+            "from_step": "Singleplex pooling",
+            "to_step": "HiSeq X",
+            "default_path": false
+          },
+          {
+            "from_step": "Multiplex pooling",
+            "to_step": "NovaSeq",
+            "default_path": false
+          },
+          {
+            "from_step": "Multiplex pooling",
+            "to_step": "HiSeq X",
+            "default_path": true
+          },
+          {
+            "from_step": "NovaSeq",
+            "to_step": null,
+            "default_path": false
+          },
+          {
+            "from_step": "HiSeq X",
+            "to_step": null,
+            "default_path": true
+          }
+        ]
+      },
+      {
+        "name": "30x Human Whole Genome Sequencing (HWGS)",
+        "uuid": "e4ee2122-495e-49da-be8a-b47ea4314584",
+        "TAT": 42,
+        "process_class": "sequencing",
+        "module_parameters": [
+          {
+            "name": "Multiplex pooling",
+            "min_value": 2,
+            "max_value": 96
+          },
+          {
+            "name": "HiSeq X",
+            "min_value": 0,
+            "max_value": null
+          }
+        ],
+        "process_module_pairings": [
+          {
+            "from_step": null,
+            "to_step": "Singleplex pooling",
+            "default_path": false
+          },
+          {
+            "from_step": null,
+            "to_step": "Multiplex pooling",
+            "default_path": true
+          },
+          {
+            "from_step": "Singleplex pooling",
+            "to_step": "NovaSeq",
+            "default_path": false
+          },
+          {
+            "from_step": "Singleplex pooling",
+            "to_step": "HiSeq X",
+            "default_path": false
+          },
+          {
+            "from_step": "Multiplex pooling",
+            "to_step": "NovaSeq",
+            "default_path": false
+          },
+          {
+            "from_step": "Multiplex pooling",
+            "to_step": "HiSeq X",
+            "default_path": true
+          },
+          {
+            "from_step": "NovaSeq",
+            "to_step": null,
+            "default_path": false
+          },
+          {
+            "from_step": "HiSeq X",
+            "to_step": null,
+            "default_path": true
+          }
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "Quality Control with 20x",
+        "description": "20x Human Whole Genome Sequencing",
+        "uuid": "5801409a-1623-491e-89cb-90919fa17bf4",
+        "product_version": 1,
+        "availability": 0,
+        "requested_biomaterial_type": "dna/rna",
+        "process_uuids": [
+          "16a0c919-0f7e-4e23-a2e0-915bb29fcc1d",
+          "2dee6168-d310-4005-9c45-904ace2c6295"
+        ]
+      },
+      {
+        "name": "Quality Control with 30x",
+        "description": "30x Human Whole Genome Sequencing",
+        "uuid": "614f9f8e-ae08-4947-9df8-73b9d18ca503",
+        "product_version": 2,
+        "availability": 1,
+        "requested_biomaterial_type": "cake",
+        "process_uuids": [
+          "16a0c919-0f7e-4e23-a2e0-915bb29fcc1d",
+          "e4ee2122-495e-49da-be8a-b47ea4314584"
+        ]
+      }
+    ]
+  }
+}
