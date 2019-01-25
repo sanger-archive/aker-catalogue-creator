@@ -81,4 +81,10 @@ public class Product implements HasName, HasUuid {
     public void setProcesses(List<AkerProcess> processes) {
         this.processes = processes;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
 }

@@ -6,6 +6,7 @@ import uk.ac.sanger.aker.catalogue.model.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author dr6
@@ -18,6 +19,11 @@ public class Validator {
         ORPHAN_MODULE("The following module(s) (is|are) not part of any process, and will not be " +
                 "included when the catalogue is saved:"),
         INVALID_DEFAULT_ROUTE("The following process(es) (has|have) invalid or missing default routes:"),
+        DUPLICATE_MODULE_NAME("There are multiple modules with the following name(s):"),
+        DUPLICATE_PROCESS_NAME("There are multiple processes with the following name(s):"),
+        DUPLICATE_PRODUCT_NAME("There are multiple products with the following name(s):"),
+        MISSING_UUIDS("The following item(s) (is|are) missing (a uuid|uuids):"),
+        DUPLICATE_UUIDS("The following UUID(s) (is|are) duplicated:"),
         ;
 
         private final String desc;
@@ -68,12 +74,65 @@ public class Validator {
                 addProblem(Problem.ORPHAN_MODULE, module);
             }
         }
+        findDuplicateNames(Problem.DUPLICATE_MODULE_NAME, catalogue.getModules());
+        findDuplicateNames(Problem.DUPLICATE_PROCESS_NAME, catalogue.getProcesses());
+        findDuplicateNames(Problem.DUPLICATE_PRODUCT_NAME, catalogue.getProducts());
+        checkUuids(Stream.of(catalogue.getProducts(), catalogue.getProcesses()).flatMap(Collection::stream));
         return anyProblems;
     }
 
     public void addProblem(Problem problem, HasName named) {
-        problems.get(problem).add(named.getName());
+        addProblem(problem, named.getName());
+    }
+
+    public void addProblem(Problem problem, String name) {
+        problems.get(problem).add(name);
         anyProblems = true;
+    }
+
+    private void findDuplicateNames(Problem problem, List<? extends HasName> items) {
+        Map<String, Integer> nameCounter = new HashMap<>(items.size());
+        for (HasName item : items) {
+            String name = item.getName();
+            nameCounter.put(name, nameCounter.getOrDefault(name, 0) + 1);
+        }
+        for (Map.Entry<String, Integer> entry : nameCounter.entrySet()) {
+            if (entry.getValue() > 1) {
+                addProblem(problem, entry.getKey());
+            }
+        }
+    }
+
+    private void checkUuids(Stream<HasUuid> itemStream) {
+        Map<String, List<HasUuid>> uuidMap = new HashMap<>();
+        itemStream.forEach(item -> {
+            String uuid = item.getUuid();
+            if (uuid==null || uuid.isEmpty()) {
+                addProblem(Problem.MISSING_UUIDS, item.toString());
+            } else {
+                uuidMap.computeIfAbsent(uuid, k -> new ArrayList<>()).add(item);
+            }
+        });
+        for (Map.Entry<String, List<HasUuid>> entry : uuidMap.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                addProblem(Problem.DUPLICATE_UUIDS, entry.getKey()+makeUL(entry.getValue()));
+            }
+        }
+    }
+
+    private static String makeUL(List<?> items) {
+        StringBuilder sb = new StringBuilder("<ul>");
+        for (Object item : items) {
+            sb.append("<li>");
+            if (item instanceof Product) {
+                sb.append("Product: ");
+            } else if (item instanceof AkerProcess) {
+                sb.append("Process: ");
+            }
+            sb.append(item);
+        }
+        sb.append("</ul>");
+        return sb.toString();
     }
 
     public static boolean defaultRouteValid(List<ModulePair> pairs) {

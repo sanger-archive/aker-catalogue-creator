@@ -272,7 +272,7 @@ public class CatalogueApp implements Runnable {
     }
 
     private static String htmlWrap(String body) {
-        return "<html><body style='width:300px; padding: 5px;'>" + body + "</body></html>";
+        return "<html><body style='width:400px; padding: 5px;'>" + body + "</body></html>";
     }
 
     private void showError(String title, String message, Exception exception) {
