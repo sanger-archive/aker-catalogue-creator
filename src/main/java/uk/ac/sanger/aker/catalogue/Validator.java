@@ -22,7 +22,6 @@ public class Validator {
         DUPLICATE_MODULE_NAME("There are multiple modules with the following name(s):"),
         DUPLICATE_PROCESS_NAME("There are multiple processes with the following name(s):"),
         DUPLICATE_PRODUCT_NAME("There are multiple products with the following name(s):"),
-        MISSING_UUIDS("The following item(s) (is|are) missing (a uuid|uuids):"),
         DUPLICATE_UUIDS("The following UUID(s) (is|are) duplicated:"),
         ;
 
@@ -107,9 +106,7 @@ public class Validator {
         Map<String, List<HasUuid>> uuidMap = new HashMap<>();
         itemStream.forEach(item -> {
             String uuid = item.getUuid();
-            if (uuid==null || uuid.isEmpty()) {
-                addProblem(Problem.MISSING_UUIDS, item.toString());
-            } else {
+            if (uuid!=null && !uuid.isEmpty()) {
                 uuidMap.computeIfAbsent(uuid, k -> new ArrayList<>()).add(item);
             }
         });
