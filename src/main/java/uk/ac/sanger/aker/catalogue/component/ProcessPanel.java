@@ -24,11 +24,12 @@ public class ProcessPanel extends EditPanel {
     private JComboBox<Module> moduleCombo;
     private ProcessModulePanel graphPanel;
 
+    private boolean loading;
+
     public ProcessPanel(AkerProcess process, CatalogueApp app) {
         this.process = process;
         this.app = app;
         initComponents();
-        load();
         layOut();
     }
 
@@ -37,31 +38,41 @@ public class ProcessPanel extends EditPanel {
         save();
     }
 
-
     private void initComponents() {
         headlineLabel = makeHeadline("Process");
         nameField = makeTextField();
-        nameField.getDocument().addDocumentListener(getDocumentListener());
         uuidField = new UuidField(process);
         tatField = makeSpinner(0, 0);
-        tatField.addChangeListener(getChangeListener());
         classField = makeTextField();
-        classField.getDocument().addDocumentListener(getDocumentListener());
         graphPanel = new ProcessModulePanel(app.getFrame(), process, this);
+        load();
+        nameField.getDocument().addDocumentListener(getDocumentListener());
+        tatField.addChangeListener(getChangeListener());
+        classField.getDocument().addDocumentListener(getDocumentListener());
         moduleCombo = makeCombo(app.getCatalogue().getModules().toArray(new Module[0]));
         moduleCombo.setRenderer(new ListNameRenderer());
         moduleCombo.addActionListener(e -> graphPanel.repaint());
     }
 
     private void load() {
+        if (loading) {
+            return;
+        }
+        loading = true;
         nameField.setText(process.getName());
         headlineLabel.setText("Process: "+process.getName());
+        System.out.println("TAT: "+process.getTat());
         tatField.setValue(process.getTat());
+        System.out.println("Process class: "+process.getProcessClass());
         classField.setText(process.getProcessClass());
         uuidField.setText(process.getUuid());
+        loading = false;
     }
 
     private void save() {
+        if (loading) {
+            return;
+        }
         process.setName(nameField.getText());
         headlineLabel.setText("Process: "+process.getName());
         process.setTat((int) tatField.getValue());

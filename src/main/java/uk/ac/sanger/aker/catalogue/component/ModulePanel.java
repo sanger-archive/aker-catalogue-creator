@@ -24,6 +24,8 @@ public class ModulePanel extends EditPanel {
 
     private CatalogueApp app;
 
+    private boolean loading;
+
     public ModulePanel(Module module, CatalogueApp app) {
         this.module = module;
         this.app = app;
@@ -63,13 +65,21 @@ public class ModulePanel extends EditPanel {
     }
 
     protected void load() {
+        if (loading) {
+            return;
+        }
+        loading = true;
         headlineLabel.setText("Module: "+module.getName());
         nameField.setText(module.getName());
         minField.setValue(module.getMinValue());
         maxField.setValue(module.getMaxValue());
+        loading = false;
     }
 
     protected void save() {
+        if (loading) {
+            return;
+        }
         module.setName(nameField.getText());
         module.setMinValue(minField.getValue());
         module.setMaxValue(maxField.getValue());
