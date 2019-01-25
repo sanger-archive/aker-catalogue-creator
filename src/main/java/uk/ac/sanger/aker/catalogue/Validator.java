@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 /**
  * @author dr6
  */
@@ -32,7 +34,7 @@ public class Validator {
         }
 
         public String getText(int number) {
-            return pluralise(this.desc, (number!=1));
+            return MessageVar.process(this.desc, number);
         }
     }
 
@@ -85,7 +87,11 @@ public class Validator {
     }
 
     public void addProblem(Problem problem, String name) {
-        problems.get(problem).add(name);
+        addHtmlProblem(problem, escapeHtml4(name));
+    }
+
+    public void addHtmlProblem(Problem problem, String text) {
+        problems.get(problem).add(text);
         anyProblems = true;
     }
 
@@ -97,7 +103,7 @@ public class Validator {
         }
         for (Map.Entry<String, Integer> entry : nameCounter.entrySet()) {
             if (entry.getValue() > 1) {
-                addProblem(problem, entry.getKey());
+                addHtmlProblem(problem, escapeHtml4(entry.getKey()));
             }
         }
     }
@@ -112,7 +118,7 @@ public class Validator {
         });
         for (Map.Entry<String, List<HasUuid>> entry : uuidMap.entrySet()) {
             if (entry.getValue().size() > 1) {
-                addProblem(Problem.DUPLICATE_UUIDS, entry.getKey()+makeUL(entry.getValue()));
+                addHtmlProblem(Problem.DUPLICATE_UUIDS, escapeHtml4(entry.getKey())+makeUL(entry.getValue()));
             }
         }
     }
@@ -126,7 +132,7 @@ public class Validator {
             } else if (item instanceof AkerProcess) {
                 sb.append("Process: ");
             }
-            sb.append(item);
+            sb.append(escapeHtml4(item.toString()));
         }
         sb.append("</ul>");
         return sb.toString();
@@ -169,34 +175,6 @@ public class Validator {
             }
             sb.append("</ul>");
             sb.append("</p>");
-        }
-        return sb.toString();
-    }
-
-    public static String pluralise(String text, boolean plural) {
-        StringBuilder sb = new StringBuilder(text);
-        int i = sb.indexOf("(");
-        while (i >= 0) {
-            int j = sb.indexOf("|", i);
-            int k = sb.indexOf(")", i);
-            if (j < i || j > k) {
-                j = i;
-            }
-            if (plural) {
-                if (j+1 < k) {
-                    sb.replace(i, k+1, sb.substring(j+1, k));
-                } else {
-                    sb.delete(i, k+1);
-                }
-            } else {
-                if (i+1 < j) {
-                    sb.replace(i, k + 1, sb.substring(i + 1, j));
-                } else {
-                    sb.delete(i, k+1);
-                }
-            }
-
-            i = sb.indexOf("(", i);
         }
         return sb.toString();
     }

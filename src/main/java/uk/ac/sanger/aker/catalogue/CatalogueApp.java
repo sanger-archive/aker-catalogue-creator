@@ -4,6 +4,8 @@ import uk.ac.sanger.aker.catalogue.component.*;
 import uk.ac.sanger.aker.catalogue.component.ComponentFactory.RunnableAction;
 import uk.ac.sanger.aker.catalogue.conversion.JsonExporter;
 import uk.ac.sanger.aker.catalogue.conversion.JsonImporter;
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
+import uk.ac.sanger.aker.catalogue.graph.ModuleLayoutUtil;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.*;
@@ -11,6 +13,7 @@ import java.awt.FileDialog;
 import java.io.FilenameFilter;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
@@ -35,6 +38,9 @@ public class CatalogueApp implements Runnable {
     private Action allUuidsAction;
     private final FilenameFilter filenameFilter = (dir, name) -> endsWithIgnoreCase(name, EXTENSION);
     private Path filePath;
+
+    private Map<AkerProcess, ModuleLayout> moduleLayoutCache = new HashMap<>();
+
 
     @Override
     public void run() {
@@ -141,6 +147,7 @@ public class CatalogueApp implements Runnable {
         catalogue = new Catalogue();
         filePath = null;
         frame.clear();
+        moduleLayoutCache.clear();
     }
 
     private void openCatalogue() {
@@ -154,8 +161,10 @@ public class CatalogueApp implements Runnable {
             return;
         }
         this.catalogue = catalogue;
+        checkPathValidity();
         filePath = path;
         frame.clear();
+        moduleLayoutCache.clear();
     }
 
     private void saveCatalogueAs() {
@@ -190,6 +199,35 @@ public class CatalogueApp implements Runnable {
             catalogue = null;
         }
         return catalogue;
+    }
+
+    private void checkPathValidity() {
+        List<AkerProcess> problemProcesses = catalogue.getProcesses().stream()
+                .filter(pro -> !layOutModules(pro))
+                .collect(Collectors.toList());
+        if (problemProcesses.isEmpty()) {
+            return;
+        }
+        String desc = MessageVar.process("The following process(es) contain(|s) cyclic or invalid path " +
+                "definitions that cannot be loaded:", problemProcesses.size());
+        StringBuilder sb = new StringBuilder("<p>").append(desc).append("<ul>");
+        for (AkerProcess pro : problemProcesses) {
+            sb.append("<li>").append(escapeHtml4(pro.getName()));
+        }
+        sb.append("</ul>");
+        showWarning(htmlWrap(sb.toString()), "Invalid routes");
+
+    }
+
+    private boolean layOutModules(AkerProcess pro) {
+        try {
+            ModuleLayout layout = ModuleLayoutUtil.layOut(pro.getModulePairs());
+            saveModuleLayout(pro, layout);
+            return true;
+        } catch (Exception e) {
+            pro.setModulePairs(new ArrayList<>());
+            return false;
+        }
     }
 
     private boolean savePath(Path path) {
@@ -257,7 +295,7 @@ public class CatalogueApp implements Runnable {
         if (pro==null) {
             return;
         }
-        copiedModuleMap = new CopiedModuleMap(frame.getModuleLayout(pro), pro.getModulePairs());
+        copiedModuleMap = new CopiedModuleMap(getModuleLayout(pro), pro.getModulePairs());
     }
 
     private void pasteModuleMap() {
@@ -269,7 +307,7 @@ public class CatalogueApp implements Runnable {
         catalogueModules.add(Module.START);
         catalogueModules.add(Module.END);
         copiedModuleMap.filter(catalogueModules);
-        frame.saveModuleLayout(pro, copiedModuleMap.getLayout());
+        saveModuleLayout(pro, copiedModuleMap.getLayout());
         pro.setModulePairs(copiedModuleMap.getPairs());
         pasteModuleMapAction.setEnabled(false);
         frame.clearEditPanel();
@@ -286,17 +324,20 @@ public class CatalogueApp implements Runnable {
     }
 
     private void validateCatalogue() {
-        Validator validator = new Validator(frame::getModuleLayout);
+        Validator validator = new Validator(this::getModuleLayout);
         if (validator.findProblems(catalogue)) {
-            JOptionPane.showMessageDialog(frame, htmlWrap(validator.problemsHtml()),
-                    "Problems found", JOptionPane.WARNING_MESSAGE);
+            showWarning(htmlWrap(validator.problemsHtml()), "Problems found");
         } else {
             JOptionPane.showMessageDialog(frame, "No problems found.", "Valid", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
+    private void showWarning(String text, String title) {
+        JOptionPane.showMessageDialog(frame, text, title, JOptionPane.WARNING_MESSAGE);
+    }
+
     private boolean validateForSave() {
-        Validator validator = new Validator(frame::getModuleLayout);
+        Validator validator = new Validator(this::getModuleLayout);
         if (!validator.findProblems(catalogue)) {
             return true;
         }
@@ -307,4 +348,11 @@ public class CatalogueApp implements Runnable {
         return (result==JOptionPane.OK_OPTION);
     }
 
+    public ModuleLayout getModuleLayout(AkerProcess process) {
+        return moduleLayoutCache.get(process);
+    }
+
+    public void saveModuleLayout(AkerProcess process, ModuleLayout layout) {
+        moduleLayoutCache.put(process, layout);
+    }
 }

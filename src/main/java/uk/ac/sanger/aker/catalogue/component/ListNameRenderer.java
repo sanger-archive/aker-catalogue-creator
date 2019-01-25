@@ -11,6 +11,9 @@ import java.awt.Component;
  * @author dr6
  */
 public class ListNameRenderer extends DefaultListCellRenderer {
+    public ListNameRenderer() {
+        putClientProperty("html.disable", Boolean.TRUE);
+    }
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean selected, boolean focus) {
         if (value instanceof HasName) {

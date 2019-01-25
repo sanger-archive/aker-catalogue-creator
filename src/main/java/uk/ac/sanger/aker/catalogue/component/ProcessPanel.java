@@ -44,7 +44,7 @@ public class ProcessPanel extends EditPanel {
         uuidField = new UuidField(process);
         tatField = makeSpinner(0, 0);
         classField = makeTextField();
-        graphPanel = new ProcessModulePanel(app.getFrame(), process, this);
+        graphPanel = new ProcessModulePanel(app, process, this);
         load();
         nameField.getDocument().addDocumentListener(getDocumentListener());
         tatField.addChangeListener(getChangeListener());

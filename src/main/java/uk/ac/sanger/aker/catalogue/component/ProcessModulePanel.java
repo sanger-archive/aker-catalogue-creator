@@ -1,5 +1,6 @@
 package uk.ac.sanger.aker.catalogue.component;
 
+import uk.ac.sanger.aker.catalogue.CatalogueApp;
 import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
 import uk.ac.sanger.aker.catalogue.graph.ModuleLayoutUtil;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
@@ -39,15 +40,15 @@ public class ProcessModulePanel extends JPanel {
         }
     }
 
-    private CatalogueFrame frame;
+    private CatalogueApp app;
     private ProcessPanel processPanel;
     private AkerProcess process;
     private ModuleGraph graph;
     private ModuleMouseControl mouseControl;
     private Rectangle graphBounds;
 
-    public ProcessModulePanel(CatalogueFrame frame, AkerProcess process, ProcessPanel processPanel) {
-        this.frame = frame;
+    public ProcessModulePanel(CatalogueApp app, AkerProcess process, ProcessPanel processPanel) {
+        this.app = app;
         this.processPanel = processPanel;
         this.process = process;
         setBackground(Color.white);
@@ -72,10 +73,10 @@ public class ProcessModulePanel extends JPanel {
     }
 
     private ModuleLayout getModuleLayout() {
-        ModuleLayout layout = frame.getModuleLayout(process);
+        ModuleLayout layout = app.getModuleLayout(process);
         if (layout==null) {
-            layout = ModuleLayoutUtil.layOut(process.getModulePairs(), 160, 80);
-            frame.saveModuleLayout(process, layout);
+            layout = ModuleLayoutUtil.layOut(process.getModulePairs());
+            app.saveModuleLayout(process, layout);
         }
         return layout;
     }

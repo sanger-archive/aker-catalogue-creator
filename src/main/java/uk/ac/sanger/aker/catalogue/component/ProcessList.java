@@ -23,8 +23,10 @@ public class ProcessList extends JPanel {
         listModel = new AbstractEditableListModel<>(product::getProcesses);
         list = new JList<>(listModel);
         list.setPrototypeCellValue(new AkerProcess("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"));
+        list.setCellRenderer(new ListNameRenderer());
         ListTransferHandler.applyTo(list);
         combo = new JComboBox<>(allProcesses.toArray(new AkerProcess[0]));
+        combo.setRenderer(new ListNameRenderer());
         combo.setSelectedItem(null);
         addButton = makeButton("Add", e -> fireAdd());
 

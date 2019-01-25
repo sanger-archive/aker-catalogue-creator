@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
  * @author dr6
  */
 public class ModuleLayoutUtil {
+    private static final int XSEP = 160, YSEP = 80;
 
     public static List<List<Module>> getRows(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
         TopologicalSorter<Module> sorter = new TopologicalSorter<>(modules);
@@ -33,8 +34,7 @@ public class ModuleLayoutUtil {
         return rows;
     }
 
-    public static ModuleLayout layOut(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs,
-                                      int dx, int dy) {
+    public static ModuleLayout layOut(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
         List<List<Module>> rows = getRows(modules, pairs);
         // Start is at (0,0).
         // Rows are below, to the left and right of zero, so (0,0) should be centre-top
@@ -47,23 +47,23 @@ public class ModuleLayoutUtil {
                 if (xoffsets[i-1]!=0) {
                     xoffsets[i] = -xoffsets[i-1];
                 } else {
-                    xoffsets[i] = dx/2;
+                    xoffsets[i] = XSEP /2;
                 }
             }
         }
         for (int i = 0; i < rows.size(); i++) {
             List<Module> row = rows.get(i);
-            int x = xoffsets[i] - dx * (row.size() - 1) / 2;
+            int x = xoffsets[i] - XSEP * (row.size() - 1) / 2;
             for (Module mod : row) {
                 positions.put(mod, new Point(x, y));
-                x += dx;
+                x += XSEP;
             }
-            y += dy;
+            y += YSEP;
         }
         return new ModuleLayout(positions);
     }
 
-    public static ModuleLayout layOut(Collection<? extends ModulePair> pairs, int dx, int dy) {
+    public static ModuleLayout layOut(Collection<? extends ModulePair> pairs) {
         List<Module> modules = pairs.stream()
                 .map(ModulePair::getFrom)
                 .distinct()
@@ -72,6 +72,6 @@ public class ModuleLayoutUtil {
         if (!modules.contains(Module.START)) {
             modules.add(0, Module.START);
         }
-        return layOut(modules, pairs, dx, dy);
+        return layOut(modules, pairs);
     }
 }
