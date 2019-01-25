@@ -61,9 +61,7 @@ public class ProcessPanel extends EditPanel {
         loading = true;
         nameField.setText(process.getName());
         headlineLabel.setText("Process: "+process.getName());
-        System.out.println("TAT: "+process.getTat());
         tatField.setValue(process.getTat());
-        System.out.println("Process class: "+process.getProcessClass());
         classField.setText(process.getProcessClass());
         uuidField.setText(process.getUuid());
         loading = false;
