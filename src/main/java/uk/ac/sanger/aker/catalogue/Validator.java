@@ -15,16 +15,16 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
  */
 public class Validator {
     enum Problem {
-        PROCESS_WITH_DISCONNECTED_MODULES("The following process(es) contain(s|) modules with no routes. " +
-                "Those modules will not be linked to the process(es) when the catalogue is saved:"),
-        PROCESS_WITH_NO_MODULES("The following process(es) contain(s|) no modules:"),
-        ORPHAN_MODULE("The following module(s) (is|are) not part of any process, and will not be " +
+        PROCESS_WITH_DISCONNECTED_MODULES("The following process{es} contain{s|} modules with no routes. " +
+                "Those modules will not be linked to the process{es} when the catalogue is saved:"),
+        PROCESS_WITH_NO_MODULES("The following process{es} contain{s|} no modules:"),
+        ORPHAN_MODULE("The following module{s} {is|are} not part of any process, and will not be " +
                 "included when the catalogue is saved:"),
-        INVALID_DEFAULT_ROUTE("The following process(es) (has|have) invalid or missing default routes:"),
-        DUPLICATE_MODULE_NAME("There are multiple modules with the following name(s):"),
-        DUPLICATE_PROCESS_NAME("There are multiple processes with the following name(s):"),
-        DUPLICATE_PRODUCT_NAME("There are multiple products with the following name(s):"),
-        DUPLICATE_UUIDS("The following UUID(s) (is|are) duplicated:"),
+        INVALID_DEFAULT_ROUTE("The following process{es} {has|have} invalid or missing default routes:"),
+        DUPLICATE_MODULE_NAME("There are multiple modules with the following name{s}:"),
+        DUPLICATE_PROCESS_NAME("There are multiple processes with the following name{s}:"),
+        DUPLICATE_PRODUCT_NAME("There are multiple products with the following name{s}:"),
+        DUPLICATE_UUIDS("The following UUID{s} {is|are} duplicated:"),
         ;
 
         private final String desc;

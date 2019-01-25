@@ -208,7 +208,7 @@ public class CatalogueApp implements Runnable {
         if (problemProcesses.isEmpty()) {
             return;
         }
-        String desc = MessageVar.process("The following process(es) contain(|s) cyclic or invalid path " +
+        String desc = MessageVar.process("The following process{es} contain{s|} cyclic or invalid path " +
                 "definitions that cannot be loaded:", problemProcesses.size());
         StringBuilder sb = new StringBuilder("<p>").append(desc).append("<ul>");
         for (AkerProcess pro : problemProcesses) {

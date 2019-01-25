@@ -24,30 +24,33 @@ public class MessageVar {
      * @see #PLURAL
      */
     public static String process(String template, int number) {
+        int i = template.indexOf('{');
+        if (i < 0) {
+            return template;
+        }
         StringBuilder sb = new StringBuilder(template);
-        int i = sb.indexOf("(");
-        while (i >= 0) {
+        do {
             int j = sb.indexOf("|", i);
-            int k = sb.indexOf(")", i);
+            int k = sb.indexOf("}", i);
             if (j < i || j > k) {
                 j = i;
             }
-            if (number!=SINGULAR) {
-                if (i+1 < j) {
-                    sb.replace(i, k + 1, sb.substring(i + 1, j));
-                } else {
-                    sb.delete(i, k+1);
-                }
+            int s,e;
+            if (number==SINGULAR) {
+                s = i + 1;
+                e = j;
             } else {
-                if (j+1 < k) {
-                    sb.replace(i, k+1, sb.substring(j+1, k));
-                } else {
-                    sb.delete(i, k+1);
-                }
+                s = j + 1;
+                e = k;
             }
+            if (s < e) {
+                sb.replace(i, k+1, sb.substring(s, e));
+            } else {
+                sb.delete(i, k+1);
+            }
+            i = sb.indexOf("{", i);
+        } while (i >= 0);
 
-            i = sb.indexOf("(", i);
-        }
         return sb.toString();
     }
 }

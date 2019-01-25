@@ -13,6 +13,7 @@ import static javax.json.Json.createObjectBuilder;
 import static org.testng.Assert.*;
 
 /**
+ * Tests for {@link JsonImporter} and {@link JsonExporter}
  * @author dr6
  */
 @Test
