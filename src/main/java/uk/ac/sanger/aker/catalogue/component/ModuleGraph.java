@@ -20,6 +20,7 @@ public class ModuleGraph {
     private static final Color projectedPathStrongColour = new Color(0x80800080, true);
     private static final Color pathColour = new Color(0x80808080, true);
     private static final Color defaultPathColour = new Color(0x8000c000, true);
+    private static final Color selectionColour = Color.magenta;
     public static final int MODULE_WIDTH = 120, MODULE_HEIGHT = 40;
 
     private List<ModulePair> pairs;
@@ -77,7 +78,7 @@ public class ModuleGraph {
         Point pos = layout.get(selected);
         int x = pos.x - MODULE_WIDTH/2;
         int y = pos.y - MODULE_HEIGHT/2;
-        g.setColor(Color.blue);
+        g.setColor(selectionColour);
         g.drawRect(x-1, y-1, MODULE_WIDTH+2, MODULE_HEIGHT+2);
         g.drawRect(x-2, y-2, MODULE_WIDTH+4, MODULE_HEIGHT+4);
     }
@@ -130,7 +131,7 @@ public class ModuleGraph {
         double theta = Math.atan2(dy, dx);
         int distance = (int) Math.hypot(dx, dy);
         g.rotate(theta, end.x, end.y);
-        g.setColor(Color.blue);
+        g.setColor(selectionColour);
         g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
                 1, new float[] { 10 }, 5));
         g.drawRect(end.x - distance + 15, end.y - 5, distance - 30, 10);

@@ -70,24 +70,26 @@ public class CatalogueApp implements Runnable {
     }
 
     private JMenuBar createMenuBar() {
-        JMenu fileMenu = new JMenu("File");
-        fileMenu.add(newAction);
-        fileMenu.add(openAction);
-        fileMenu.addSeparator();
-        fileMenu.add(saveAction);
-        fileMenu.add(saveAsAction);
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.add(validateAction);
-        editMenu.addSeparator();
-        editMenu.add(allUuidsAction);
-        editMenu.addSeparator();
-        editMenu.add(copyModuleMapAction);
-        editMenu.add(pasteModuleMapAction);
+        JMenu fileMenu = createMenu("File", newAction, openAction, null, saveAction, saveAsAction);
+        JMenu editMenu = createMenu("Edit", validateAction, null, allUuidsAction, null,
+                copyModuleMapAction, pasteModuleMapAction);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         return menuBar;
+    }
+
+    private JMenu createMenu(String name, Action... actions) {
+        JMenu menu = new JMenu(name);
+        for (Action action : actions) {
+            if (action==null) {
+                menu.addSeparator();
+            } else {
+                menu.add(action);
+            }
+        }
+        return menu;
     }
 
     public Catalogue getCatalogue() {
@@ -96,16 +98,19 @@ public class CatalogueApp implements Runnable {
 
     public void view(Module module) {
         copyModuleMapAction.setEnabled(false);
+        pasteModuleMapAction.setEnabled(false);
         frame.view(module);
     }
 
     public void view(Product product) {
         copyModuleMapAction.setEnabled(false);
+        pasteModuleMapAction.setEnabled(false);
         frame.view(product);
     }
 
     public void view(AkerProcess process) {
         copyModuleMapAction.setEnabled(process!=null);
+        pasteModuleMapAction.setEnabled(process!=null && copiedModuleMap!=null);
         frame.view(process);
     }
 
