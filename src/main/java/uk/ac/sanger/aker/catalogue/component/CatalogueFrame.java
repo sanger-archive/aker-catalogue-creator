@@ -1,6 +1,7 @@
 package uk.ac.sanger.aker.catalogue.component;
 
 import uk.ac.sanger.aker.catalogue.CatalogueApp;
+import uk.ac.sanger.aker.catalogue.Help;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class CatalogueFrame extends JFrame {
     private CatalogueApp app;
     private CataloguePanel cataloguePanel;
     private JScrollPane editScrollPane;
+    private JDialog helpDialog;
 
     public CatalogueFrame(CatalogueApp app) {
         super("Catalogue");
@@ -23,7 +25,7 @@ public class CatalogueFrame extends JFrame {
         splitPane.setResizeWeight(0);
 
         setContentPane(splitPane);
-        setBounds(50,50,1200,700);
+        setBounds(50, 50, 1200, 700);
     }
 
     public void clear() {
@@ -36,7 +38,8 @@ public class CatalogueFrame extends JFrame {
     }
 
     public void view(Module module) {
-        if (module==null) {
+        disposeHelp();
+        if (module == null) {
             clearEditPanel();
         } else {
             ModulePanel modulePanel = new ModulePanel(module, app);
@@ -45,7 +48,8 @@ public class CatalogueFrame extends JFrame {
     }
 
     public void view(Product product) {
-        if (product==null) {
+        disposeHelp();
+        if (product == null) {
             clearEditPanel();
         } else {
             ProductPanel productPanel = new ProductPanel(product, app);
@@ -54,7 +58,8 @@ public class CatalogueFrame extends JFrame {
     }
 
     public void view(AkerProcess process) {
-        if (process==null) {
+        disposeHelp();
+        if (process == null) {
             clearEditPanel();
         } else {
             ProcessPanel processPanel = new ProcessPanel(process, app);
@@ -76,9 +81,27 @@ public class CatalogueFrame extends JFrame {
 
     public void clearEditPanel() {
         editScrollPane.setViewportView(new JPanel());
+        disposeHelp();
     }
 
     public CataloguePanel getCataloguePanel() {
         return cataloguePanel;
+    }
+
+    public void showHelp(String helpText) {
+        disposeHelp();
+
+        JOptionPane optionPane = new JOptionPane(helpText, JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION, Help.HELP_ICON);
+        helpDialog = optionPane.createDialog(this, "Help");
+        helpDialog.setModal(false);
+        helpDialog.setVisible(true);
+    }
+
+    public void disposeHelp() {
+        if (helpDialog!=null) {
+            helpDialog.dispose();
+            helpDialog = null;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package uk.ac.sanger.aker.catalogue.component;
 
+import uk.ac.sanger.aker.catalogue.Help;
+
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -70,5 +72,11 @@ public class ComponentFactory {
         public void actionPerformed(ActionEvent e) {
             runnable.run();
         }
+    }
+
+    public static JButton makeHelpButton() {
+        JButton button = new JButton(Help.HELP_ICON);
+        button.setToolTipText("Help");
+        return button;
     }
 }

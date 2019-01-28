@@ -1,6 +1,7 @@
 package uk.ac.sanger.aker.catalogue.component;
 
 import uk.ac.sanger.aker.catalogue.CatalogueApp;
+import uk.ac.sanger.aker.catalogue.Help;
 import uk.ac.sanger.aker.catalogue.model.AkerProcess;
 import uk.ac.sanger.aker.catalogue.model.Module;
 
@@ -23,6 +24,7 @@ public class ProcessPanel extends EditPanel {
     private JTextField classField;
     private JComboBox<Module> moduleCombo;
     private ProcessModulePanel graphPanel;
+    private JButton helpButton;
 
     private boolean loading;
 
@@ -45,6 +47,8 @@ public class ProcessPanel extends EditPanel {
         tatField = makeSpinner(0, 0);
         classField = makeTextField();
         graphPanel = new ProcessModulePanel(app, process, this);
+        helpButton = makeHelpButton();
+        helpButton.setEnabled(!Help.MODULE_GRAPH_HELP.equals(Help.MISSING_TEXT));
         load();
         nameField.getDocument().addDocumentListener(getDocumentListener());
         tatField.addChangeListener(getChangeListener());
@@ -52,6 +56,7 @@ public class ProcessPanel extends EditPanel {
         moduleCombo = makeCombo(app.getCatalogue().getModules().toArray(new Module[0]));
         moduleCombo.setRenderer(new ListNameRenderer());
         moduleCombo.addActionListener(e -> graphPanel.repaint());
+        helpButton.addActionListener(e -> showGraphHelp());
     }
 
     private void load() {
@@ -92,10 +97,12 @@ public class ProcessPanel extends EditPanel {
         add("Process class:", classField, constraints.incy());
 
         Box box = Box.createHorizontalBox();
+        box.add(helpButton);
+        box.add(Box.createHorizontalGlue());
         box.add(makeLabel("To add:"));
         box.add(Box.createHorizontalStrut(10));
         box.add(moduleCombo);
-        constraints.rightAnchor = GridBagConstraints.LINE_END;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets.top = 10;
         JLabel modulesLabel = makeLabel("Modules:");
         modulesLabel.setFont(modulesLabel.getFont().deriveFont(Font.BOLD));
@@ -113,5 +120,9 @@ public class ProcessPanel extends EditPanel {
 
     public void clearModuleToAdd() {
         moduleCombo.setSelectedItem(null);
+    }
+
+    private void showGraphHelp() {
+        app.getFrame().showHelp(Help.MODULE_GRAPH_HELP);
     }
 }

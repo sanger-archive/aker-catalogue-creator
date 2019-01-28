@@ -314,7 +314,7 @@ public class CatalogueApp implements Runnable {
         frame.view(pro);
     }
 
-    private static String htmlWrap(String body) {
+    public static String htmlWrap(String body) {
         return "<html><body style='width:400px; padding: 5px;'>" + body + "</body></html>";
     }
 
