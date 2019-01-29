@@ -15,17 +15,16 @@ public class EditPanelFactory {
         this.app = app;
     }
 
-    @SuppressWarnings("unchecked")
-    public <E> EditPanel<E> makePanel(E item) {
+    public <E> EditPanel makePanel(E item) {
         Objects.requireNonNull(item, "makePanel received null");
         if (item instanceof Module) {
-            return (EditPanel) new ModulePanel((Module) item, app);
+            return new ModulePanel((Module) item, app);
         }
         if (item instanceof AkerProcess) {
-            return (EditPanel) new ProcessPanel((AkerProcess) item, app);
+            return new ProcessPanel((AkerProcess) item, app);
         }
         if (item instanceof Product) {
-            return (EditPanel) new ProductPanel((Product) item, app);
+            return new ProductPanel((Product) item, app);
         }
         throw new IllegalArgumentException("makePanel received unexpected item: "+item);
     }

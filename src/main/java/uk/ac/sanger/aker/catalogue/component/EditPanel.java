@@ -10,7 +10,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 /**
  * @author dr6
  */
-abstract class EditPanel<E> extends JPanel {
+abstract class EditPanel extends JPanel {
     protected ChangeListener changeListener;
     protected DocumentListener documentListener;
 

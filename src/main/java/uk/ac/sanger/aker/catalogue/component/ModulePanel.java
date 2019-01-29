@@ -14,7 +14,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextFie
 /**
  * @author dr6
  */
-public class ModulePanel extends EditPanel<Module> {
+public class ModulePanel extends EditPanel {
     private Module module;
 
     private JLabel headlineLabel;

@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 /**
  * @author dr6
  */
-public class ProductPanel extends EditPanel<Product> {
+public class ProductPanel extends EditPanel {
     private CatalogueApp app;
     private Product product;
 

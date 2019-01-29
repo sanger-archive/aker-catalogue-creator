@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 /**
  * @author dr6
  */
-public class ProcessPanel extends EditPanel<AkerProcess> {
+public class ProcessPanel extends EditPanel {
     private CatalogueApp app;
     private AkerProcess process;
 

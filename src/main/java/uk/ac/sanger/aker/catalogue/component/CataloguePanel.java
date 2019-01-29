@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextFie
 /**
  * @author dr6
  */
-public class CataloguePanel extends EditPanel<Catalogue> {
+public class CataloguePanel extends EditPanel {
     private CatalogueApp app;
     private JTextField pipelineField;
     private JTextField urlField;

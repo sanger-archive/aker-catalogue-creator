@@ -14,7 +14,7 @@ public class CatalogueFrame extends JFrame {
     private CataloguePanel cataloguePanel;
     private JScrollPane editScrollPane;
     private JDialog helpDialog;
-    private EditPanel<?> editPanel;
+    private EditPanel editPanel;
     private EditPanelFactory editPanelFactory;
 
     public CatalogueFrame(CatalogueApp app) {
