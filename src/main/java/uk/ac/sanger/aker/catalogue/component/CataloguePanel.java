@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextFie
 /**
  * @author dr6
  */
-public class CataloguePanel extends EditPanel {
+public class CataloguePanel extends EditPanel<Catalogue> {
     private CatalogueApp app;
     private JTextField pipelineField;
     private JTextField urlField;
@@ -38,6 +38,7 @@ public class CataloguePanel extends EditPanel {
         productList = new ListComponent<>("Products:", new ProductListActor(app));
     }
 
+    @Override
     public void load() {
         Catalogue catalogue = getCatalogue();
         pipelineField.setText(catalogue.getPipeline());
@@ -73,7 +74,12 @@ public class CataloguePanel extends EditPanel {
 
     @Override
     protected void updateState() {
-        //TODO
+        // nothing
+    }
+
+    @Override
+    protected void fireOpen() {
+        // nothing
     }
 
     public AkerProcess getSelectedProcess() {
@@ -95,4 +101,5 @@ public class CataloguePanel extends EditPanel {
     public void processesUpdated() {
         processList.repaint();
     }
+
 }

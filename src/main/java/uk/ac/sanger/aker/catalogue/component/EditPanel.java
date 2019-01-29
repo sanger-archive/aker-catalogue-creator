@@ -3,7 +3,6 @@ package uk.ac.sanger.aker.catalogue.component;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
-
 import java.awt.Component;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
@@ -11,7 +10,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 /**
  * @author dr6
  */
-abstract class EditPanel extends JPanel {
+abstract class EditPanel<E> extends JPanel {
     protected ChangeListener changeListener;
     protected DocumentListener documentListener;
 
@@ -44,4 +43,9 @@ abstract class EditPanel extends JPanel {
         Component left = (leftLabelText==null ? null : makeLabel(leftLabelText));
         add(left, right, quickConstraints);
     }
+
+    protected abstract void load();
+
+    protected abstract void fireOpen();
+
 }

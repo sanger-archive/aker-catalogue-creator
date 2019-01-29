@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 /**
  * @author dr6
  */
-public class ProductPanel extends EditPanel {
+public class ProductPanel extends EditPanel<Product> {
     private CatalogueApp app;
     private Product product;
 
@@ -73,7 +73,8 @@ public class ProductPanel extends EditPanel {
         add("Processes:", processList, constraints.incy());
     }
 
-    private void load() {
+    @Override
+    protected void load() {
         if (loading) {
             return;
         }
@@ -110,7 +111,9 @@ public class ProductPanel extends EditPanel {
         save();
     }
 
+    @Override
     public void fireOpen() {
         nameField.requestFocusInWindow();
     }
+
 }

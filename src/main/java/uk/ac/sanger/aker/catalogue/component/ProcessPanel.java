@@ -13,7 +13,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 /**
  * @author dr6
  */
-public class ProcessPanel extends EditPanel {
+public class ProcessPanel extends EditPanel<AkerProcess> {
     private CatalogueApp app;
     private AkerProcess process;
 
@@ -59,7 +59,8 @@ public class ProcessPanel extends EditPanel {
         helpButton.addActionListener(e -> showGraphHelp());
     }
 
-    private void load() {
+    @Override
+    protected void load() {
         if (loading) {
             return;
         }
@@ -126,7 +127,9 @@ public class ProcessPanel extends EditPanel {
         app.getFrame().showHelp(Help.MODULE_GRAPH_HELP);
     }
 
+    @Override
     public void fireOpen() {
         nameField.requestFocusInWindow();
     }
+
 }

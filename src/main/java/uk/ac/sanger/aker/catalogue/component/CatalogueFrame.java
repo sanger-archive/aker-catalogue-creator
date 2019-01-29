@@ -2,7 +2,7 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import uk.ac.sanger.aker.catalogue.CatalogueApp;
 import uk.ac.sanger.aker.catalogue.Help;
-import uk.ac.sanger.aker.catalogue.model.*;
+import uk.ac.sanger.aker.catalogue.model.Catalogue;
 
 import javax.swing.*;
 
@@ -14,10 +14,13 @@ public class CatalogueFrame extends JFrame {
     private CataloguePanel cataloguePanel;
     private JScrollPane editScrollPane;
     private JDialog helpDialog;
+    private EditPanel<?> editPanel;
+    private EditPanelFactory editPanelFactory;
 
     public CatalogueFrame(CatalogueApp app) {
         super("Catalogue");
         this.app = app;
+        this.editPanelFactory = new EditPanelFactory(app);
         cataloguePanel = new CataloguePanel(app);
         editScrollPane = new JScrollPane(new JPanel());
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(cataloguePanel), editScrollPane);
@@ -37,43 +40,22 @@ public class CatalogueFrame extends JFrame {
         return cataloguePanel.getCatalogue();
     }
 
-    public void view(Module module, boolean open) {
+    public <E> void view(E item, boolean open) {
         disposeHelp();
-        if (module == null) {
+        if (item==null) {
             clearEditPanel();
         } else {
-            ModulePanel modulePanel = new ModulePanel(module, app);
-            editScrollPane.setViewportView(modulePanel);
+            editPanel = editPanelFactory.makePanel(item);
+            editScrollPane.setViewportView(editPanel);
             if (open) {
-                modulePanel.fireOpen();
-            }
-
-        }
-    }
-
-    public void view(Product product, boolean open) {
-        disposeHelp();
-        if (product == null) {
-            clearEditPanel();
-        } else {
-            ProductPanel productPanel = new ProductPanel(product, app);
-            editScrollPane.setViewportView(productPanel);
-            if (open) {
-                productPanel.fireOpen();
+                editPanel.fireOpen();
             }
         }
     }
 
-    public void view(AkerProcess process, boolean open) {
-        disposeHelp();
-        if (process == null) {
-            clearEditPanel();
-        } else {
-            ProcessPanel processPanel = new ProcessPanel(process, app);
-            editScrollPane.setViewportView(processPanel);
-            if (open) {
-                processPanel.fireOpen();
-            }
+    public void editPanelLoad() {
+        if (editPanel!=null) {
+            editPanel.load();
         }
     }
 
@@ -90,8 +72,11 @@ public class CatalogueFrame extends JFrame {
     }
 
     public void clearEditPanel() {
-        editScrollPane.setViewportView(new JPanel());
-        disposeHelp();
+        if (editPanel!=null) {
+            disposeHelp();
+            editScrollPane.setViewportView(new JPanel());
+            editPanel = null;
+        }
     }
 
     public CataloguePanel getCataloguePanel() {

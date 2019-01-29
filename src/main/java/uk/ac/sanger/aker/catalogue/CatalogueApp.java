@@ -102,22 +102,11 @@ public class CatalogueApp implements Runnable {
         return this.catalogue;
     }
 
-    public void view(Module module, boolean open) {
-        copyModuleMapAction.setEnabled(false);
-        pasteModuleMapAction.setEnabled(false);
-        frame.view(module, open);
-    }
-
-    public void view(Product product, boolean open) {
-        copyModuleMapAction.setEnabled(false);
-        pasteModuleMapAction.setEnabled(false);
-        frame.view(product, open);
-    }
-
-    public void view(AkerProcess process, boolean open) {
-        copyModuleMapAction.setEnabled(process!=null);
-        pasteModuleMapAction.setEnabled(process!=null && copiedModuleMap!=null);
-        frame.view(process, open);
+    public <E> void view(E item, boolean open) {
+        boolean isProcess = (item instanceof AkerProcess);
+        copyModuleMapAction.setEnabled(isProcess);
+        pasteModuleMapAction.setEnabled(isProcess && copiedModuleMap!=null);
+        frame.view(item, open);
     }
 
     public void productsUpdated() {
@@ -222,7 +211,7 @@ public class CatalogueApp implements Runnable {
     private boolean layOutModules(AkerProcess pro) {
         try {
             ModuleLayout layout = ModuleLayoutUtil.layOut(pro.getModulePairs());
-            saveModuleLayout(pro, layout);
+            getLayoutCache().put(pro, layout);
             return true;
         } catch (Exception e) {
             pro.setModulePairs(new ArrayList<>());
@@ -251,7 +240,7 @@ public class CatalogueApp implements Runnable {
                         item.setUuid(UUID.randomUUID().toString());
                     }
                 });
-        frame.clearEditPanel();
+        frame.editPanelLoad();
     }
 
     private static boolean endsWithIgnoreCase(String string, String sub) {
@@ -295,7 +284,7 @@ public class CatalogueApp implements Runnable {
         if (pro==null) {
             return;
         }
-        copiedModuleMap = new CopiedModuleMap(getModuleLayout(pro), pro.getModulePairs());
+        copiedModuleMap = new CopiedModuleMap(getLayoutCache().get(pro), pro.getModulePairs());
     }
 
     private void pasteModuleMap() {
@@ -307,7 +296,7 @@ public class CatalogueApp implements Runnable {
         catalogueModules.add(Module.START);
         catalogueModules.add(Module.END);
         copiedModuleMap.filter(catalogueModules);
-        saveModuleLayout(pro, copiedModuleMap.getLayout());
+        getLayoutCache().put(pro, copiedModuleMap.getLayout());
         pro.setModulePairs(copiedModuleMap.getPairs());
         pasteModuleMapAction.setEnabled(false);
         frame.clearEditPanel();
@@ -324,11 +313,11 @@ public class CatalogueApp implements Runnable {
     }
 
     private void validateCatalogue() {
-        Validator validator = new Validator(this::getModuleLayout);
+        Validator validator = new Validator(process -> moduleLayoutCache.get(process));
         if (validator.findProblems(catalogue)) {
             showWarning(htmlWrap(validator.problemsHtml()), "Problems found");
         } else {
-            JOptionPane.showMessageDialog(frame, "No problems found.", "Valid", JOptionPane.INFORMATION_MESSAGE);
+            showInfo("No problems found.", "Valid");
         }
     }
 
@@ -336,8 +325,12 @@ public class CatalogueApp implements Runnable {
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.WARNING_MESSAGE);
     }
 
+    private void showInfo(String text, String title) {
+        JOptionPane.showMessageDialog(frame, text, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
     private boolean validateForSave() {
-        Validator validator = new Validator(this::getModuleLayout);
+        Validator validator = new Validator(process -> moduleLayoutCache.get(process));
         if (!validator.findProblems(catalogue)) {
             return true;
         }
@@ -348,11 +341,8 @@ public class CatalogueApp implements Runnable {
         return (result==JOptionPane.OK_OPTION);
     }
 
-    public ModuleLayout getModuleLayout(AkerProcess process) {
-        return moduleLayoutCache.get(process);
+    public Map<AkerProcess, ModuleLayout> getLayoutCache() {
+        return this.moduleLayoutCache;
     }
 
-    public void saveModuleLayout(AkerProcess process, ModuleLayout layout) {
-        moduleLayoutCache.put(process, layout);
-    }
 }

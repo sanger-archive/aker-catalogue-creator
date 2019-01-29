@@ -73,10 +73,11 @@ public class ProcessModulePanel extends JPanel {
     }
 
     private ModuleLayout getModuleLayout() {
-        ModuleLayout layout = app.getModuleLayout(process);
+        Map<AkerProcess, ModuleLayout> layoutCache = app.getLayoutCache();
+        ModuleLayout layout = layoutCache.get(process);
         if (layout==null) {
             layout = ModuleLayoutUtil.layOut(process.getModulePairs());
-            app.saveModuleLayout(process, layout);
+            layoutCache.put(process, layout);
         }
         return layout;
     }

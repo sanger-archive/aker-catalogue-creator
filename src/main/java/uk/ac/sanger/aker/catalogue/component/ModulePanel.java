@@ -14,7 +14,7 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextFie
 /**
  * @author dr6
  */
-public class ModulePanel extends EditPanel {
+public class ModulePanel extends EditPanel<Module> {
     private Module module;
 
     private JLabel headlineLabel;
@@ -64,6 +64,7 @@ public class ModulePanel extends EditPanel {
         save();
     }
 
+    @Override
     protected void load() {
         if (loading) {
             return;
@@ -87,7 +88,9 @@ public class ModulePanel extends EditPanel {
         app.modulesUpdated();
     }
 
+    @Override
     public void fireOpen() {
         nameField.requestFocusInWindow();
     }
+
 }
