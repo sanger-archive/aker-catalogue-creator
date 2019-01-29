@@ -102,22 +102,22 @@ public class CatalogueApp implements Runnable {
         return this.catalogue;
     }
 
-    public void view(Module module) {
+    public void view(Module module, boolean open) {
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
-        frame.view(module);
+        frame.view(module, open);
     }
 
-    public void view(Product product) {
+    public void view(Product product, boolean open) {
         copyModuleMapAction.setEnabled(false);
         pasteModuleMapAction.setEnabled(false);
-        frame.view(product);
+        frame.view(product, open);
     }
 
-    public void view(AkerProcess process) {
+    public void view(AkerProcess process, boolean open) {
         copyModuleMapAction.setEnabled(process!=null);
         pasteModuleMapAction.setEnabled(process!=null && copiedModuleMap!=null);
-        frame.view(process);
+        frame.view(process, open);
     }
 
     public void productsUpdated() {
@@ -311,7 +311,7 @@ public class CatalogueApp implements Runnable {
         pro.setModulePairs(copiedModuleMap.getPairs());
         pasteModuleMapAction.setEnabled(false);
         frame.clearEditPanel();
-        frame.view(pro);
+        frame.view(pro, false);
     }
 
     public static String htmlWrap(String body) {

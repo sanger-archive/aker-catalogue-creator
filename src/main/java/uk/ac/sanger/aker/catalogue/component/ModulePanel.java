@@ -86,4 +86,8 @@ public class ModulePanel extends EditPanel {
         headlineLabel.setText("Module: "+module.getName());
         app.modulesUpdated();
     }
+
+    public void fireOpen() {
+        nameField.requestFocusInWindow();
+    }
 }

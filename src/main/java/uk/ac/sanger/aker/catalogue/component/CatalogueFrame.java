@@ -37,33 +37,43 @@ public class CatalogueFrame extends JFrame {
         return cataloguePanel.getCatalogue();
     }
 
-    public void view(Module module) {
+    public void view(Module module, boolean open) {
         disposeHelp();
         if (module == null) {
             clearEditPanel();
         } else {
             ModulePanel modulePanel = new ModulePanel(module, app);
             editScrollPane.setViewportView(modulePanel);
+            if (open) {
+                modulePanel.fireOpen();
+            }
+
         }
     }
 
-    public void view(Product product) {
+    public void view(Product product, boolean open) {
         disposeHelp();
         if (product == null) {
             clearEditPanel();
         } else {
             ProductPanel productPanel = new ProductPanel(product, app);
             editScrollPane.setViewportView(productPanel);
+            if (open) {
+                productPanel.fireOpen();
+            }
         }
     }
 
-    public void view(AkerProcess process) {
+    public void view(AkerProcess process, boolean open) {
         disposeHelp();
         if (process == null) {
             clearEditPanel();
         } else {
             ProcessPanel processPanel = new ProcessPanel(process, app);
             editScrollPane.setViewportView(processPanel);
+            if (open) {
+                processPanel.fireOpen();
+            }
         }
     }
 

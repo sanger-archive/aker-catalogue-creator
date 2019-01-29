@@ -125,4 +125,8 @@ public class ProcessPanel extends EditPanel {
     private void showGraphHelp() {
         app.getFrame().showHelp(Help.MODULE_GRAPH_HELP);
     }
+
+    public void fireOpen() {
+        nameField.requestFocusInWindow();
+    }
 }

@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,7 +50,23 @@ public class ListComponent<E extends HasName> extends JPanel implements ListSele
         list.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                listActor.select(singleSelectedItem());
+                listActor.select(singleSelectedItem(), false);
+            }
+        });
+
+        list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount()==2 && SwingUtilities.isLeftMouseButton(event)) {
+                    int index = list.locationToIndex(event.getPoint());
+                    if (index >= 0) {
+                        E item = model.getElementAt(index);
+                        E selectedItem = singleSelectedItem();
+                        if (selectedItem==null || selectedItem==item) {
+                            listActor.select(item, true);
+                        }
+                    }
+                }
             }
         });
     }
@@ -99,6 +114,6 @@ public class ListComponent<E extends HasName> extends JPanel implements ListSele
     // ListSelectionListener
     @Override
     public void valueChanged(ListSelectionEvent event) {
-        listActor.select(singleSelectedItem());
+        listActor.select(singleSelectedItem(), false);
     }
 }

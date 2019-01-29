@@ -109,4 +109,8 @@ public class ProductPanel extends EditPanel {
     protected void updateState() {
         save();
     }
+
+    public void fireOpen() {
+        nameField.requestFocusInWindow();
+    }
 }
