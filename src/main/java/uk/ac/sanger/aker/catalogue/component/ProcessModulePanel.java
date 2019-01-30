@@ -82,6 +82,14 @@ public class ProcessModulePanel extends JPanel {
         return layout;
     }
 
+    public void autoLayout() {
+        ModuleLayout layout = ModuleLayoutUtil.layOut(process.getModulePairs());
+        app.getLayoutCache().put(process, layout);
+        graph.setLayout(layout);
+        updateBounds();
+        repaint();
+    }
+
     public void updateBounds() {
         ModuleLayout layout = getModuleLayout();
         Point start = layout.get(Module.START);

@@ -24,6 +24,8 @@ public class ProcessPanel extends EditPanel {
     private JTextField classField;
     private JComboBox<Module> moduleCombo;
     private ProcessModulePanel graphPanel;
+    private JButton resizeButton;
+    private JButton layoutButton;
     private JButton helpButton;
 
     private boolean loading;
@@ -49,6 +51,8 @@ public class ProcessPanel extends EditPanel {
         graphPanel = new ProcessModulePanel(app, process, this);
         helpButton = makeHelpButton();
         helpButton.setEnabled(!Help.MODULE_GRAPH_HELP.equals(Help.MISSING_TEXT));
+        resizeButton = makeButton("Resize graph window", e -> resizeGraphWindow());
+        layoutButton = makeButton("Auto layout", e -> autoLayoutGraph());
         load();
         nameField.getDocument().addDocumentListener(getDocumentListener());
         tatField.addChangeListener(getChangeListener());
@@ -105,10 +109,21 @@ public class ProcessPanel extends EditPanel {
         box.add(moduleCombo);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets.top = 10;
+        constraints.insets.bottom = 0;
         JLabel modulesLabel = makeLabel("Modules:");
         modulesLabel.setFont(modulesLabel.getFont().deriveFont(Font.BOLD));
 
         add(modulesLabel, box, constraints.incy());
+        constraints.rightAnchor = GridBagConstraints.LINE_END;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets.top = 0;
+        constraints.insets.bottom = 0;
+        box = Box.createHorizontalBox();
+        box.add(layoutButton);
+        box.add(Box.createHorizontalStrut(10));
+        box.add(resizeButton);
+        add(box, constraints.incy().right());
+
         constraints.left().gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -130,6 +145,16 @@ public class ProcessPanel extends EditPanel {
     @Override
     public void fireOpen() {
         nameField.requestFocusInWindow();
+    }
+
+    private void resizeGraphWindow() {
+        graphPanel.updateBounds();
+        revalidate();
+    }
+
+    private void autoLayoutGraph() {
+        graphPanel.autoLayout();
+        revalidate();
     }
 
 }

@@ -51,6 +51,10 @@ public class ModuleGraph {
         g.setClip(oldClip);
     }
 
+    public void setLayout(ModuleLayout layout) {
+        this.layout = layout;
+    }
+
     private static Color moduleColour(Module module) {
         if (module==Module.START || module==Module.END) {
             return endFill;
