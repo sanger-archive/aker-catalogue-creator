@@ -150,11 +150,13 @@ public class ProcessPanel extends EditPanel {
     private void resizeGraphWindow() {
         graphPanel.updateBounds();
         revalidate();
+        graphPanel.repaint();
     }
 
     private void autoLayoutGraph() {
         graphPanel.autoLayout();
         revalidate();
+        graphPanel.repaint();
     }
 
 }

@@ -87,7 +87,6 @@ public class ProcessModulePanel extends JPanel {
         app.getLayoutCache().put(process, layout);
         graph.setLayout(layout);
         updateBounds();
-        repaint();
     }
 
     public void updateBounds() {
