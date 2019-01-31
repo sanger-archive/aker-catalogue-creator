@@ -8,12 +8,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * A utility to calculate a suitable {@link ModuleLayout layout} for modules given a collection of paths between them.
  * @author dr6
  */
 public class ModuleLayoutUtil {
     private static final int XSEP = 160, YSEP = 80;
 
-    public static List<List<Module>> getRows(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
+    private static List<List<Module>> getRows(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
         TopologicalSorter<Module> sorter = new TopologicalSorter<>(modules);
         sorter.setRelations(pairs, ModulePair::getFrom, ModulePair::getTo);
         Map<Module, Set<Module>> preceders = sorter.getPreceders().entrySet().stream()
@@ -34,7 +35,7 @@ public class ModuleLayoutUtil {
         return rows;
     }
 
-    public static ModuleLayout layOut(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
+    private static ModuleLayout layOut(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {
         List<List<Module>> rows = getRows(modules, pairs);
         // Start is at (0,0).
         // Rows are below, to the left and right of zero, so (0,0) should be centre-top
@@ -63,6 +64,17 @@ public class ModuleLayoutUtil {
         return new ModuleLayout(positions);
     }
 
+    /**
+     * Generates a layout from the described paths.
+     * The modules are ordered using {@link TopologicalSorter},
+     * then arrayed into rows based on keeping path-end modules below their respective path-start module.
+     * The start module is positioned at {@code (0,0)}, and subsequent rows are
+     * positioned below, a fixed distance apart, centred around x=0.
+     * In cases where there are three consecutive rows of the same size, they will be offset in x
+     * to reduce the chance of paths hiding each other.
+     * @param pairs the paths between modules
+     * @return the layout specifying the positions of the modules
+     */
     public static ModuleLayout layOut(Collection<? extends ModulePair> pairs) {
         List<Module> modules = pairs.stream()
                 .map(ModulePair::getFrom)

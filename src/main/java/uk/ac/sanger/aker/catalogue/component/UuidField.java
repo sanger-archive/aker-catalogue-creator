@@ -14,6 +14,10 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextField;
 
 /**
+ * A field to show and edit a {@link UUID} for an instance of {@link HasUuid}.
+ * When the field is edited, if the input is a valid UUID then it will be saved in the model;
+ * otherwise the field will turn red to indicate that it is invalid.
+ * This component also includes a button that will generate a random UUID.
  * @author dr6
  */
 public class UuidField extends JPanel {
@@ -64,6 +68,11 @@ public class UuidField extends JPanel {
         setText(UUID.randomUUID().toString());
     }
 
+    /**
+     * If this field contains a valid UUID string, a {@code UUID} instance is returned.
+     * Otherwise, null is returned
+     * @return a {@code UUID} based on the string in the field, if it is valid; otherwise null
+     */
     public UUID getUuid() {
         try {
             return UUID.fromString(getText());

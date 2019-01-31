@@ -4,6 +4,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
+ * A {@link FunctionalInterface functional} version of {@code DocumentListener}.
+ * The {@link #anyChange} method is called for any update operation.
  * @author dr6
  */
 @FunctionalInterface
@@ -23,5 +25,8 @@ public interface QuickDocumentListener extends DocumentListener {
         anyChange();
     }
 
+    /**
+     * The method that is called when any update occurs.
+     */
     void anyChange();
 }

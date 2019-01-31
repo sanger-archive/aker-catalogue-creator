@@ -2,8 +2,13 @@ package uk.ac.sanger.aker.catalogue.component;
 
 import javax.swing.*;
 import java.awt.datatransfer.*;
-import java.util.stream.IntStream;
 
+/**
+ * A handler to let you drag an item up and down inside a {@link JList}.
+ * Call {@link #applyTo(JList)} to set it up.
+ * Only supports single-item selection.
+ * @param <E> the type of item in the list
+ */
 public class ListTransferHandler<E> extends TransferHandler {
     private int sourceIndex = -1;
     private int dropIndex = -1;
@@ -46,6 +51,7 @@ public class ListTransferHandler<E> extends TransferHandler {
         cleanup(c);
     }
 
+    @SuppressWarnings("unchecked")
     protected String exportElement(JComponent c) {
         JList<E> list = (JList<E>) c;
         sourceIndex = list.getSelectedIndex();
@@ -53,6 +59,7 @@ public class ListTransferHandler<E> extends TransferHandler {
         return String.valueOf(draggedItem);
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean importElement(JComponent c) {
         ListModel<E> model = ((JList) c).getModel();
         if (model instanceof EditableListModel) {
@@ -88,28 +95,18 @@ public class ListTransferHandler<E> extends TransferHandler {
         draggedItem = null;
     }
 
+    /**
+     * Set up drag-reordering in the given {@code JList}
+     * @param list the {@code JList} that you want to support drag-reordering
+     * @param <E> the type of item in the list
+     * @return the handler created to support the list (may safely be ignored)
+     */
     public static <E> ListTransferHandler<E> applyTo(JList<E> list) {
-        ListTransferHandler<E> handler = new ListTransferHandler<E>();
+        ListTransferHandler<E> handler = new ListTransferHandler<>();
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setDropMode(DropMode.INSERT);
         list.setDragEnabled(true);
         list.setTransferHandler(handler);
         return handler;
-    }
-
-    public static void main(String[] args) {
-
-        DefaultListModel<String> model = new DefaultListModel<String>() {};
-        IntStream.range(0, 10).mapToObj(i -> "Item "+i).forEach(model::addElement);
-        JList<String> list = new JList<>(model);
-        applyTo(list);
-        JPanel panel = new JPanel();
-        panel.add(new JScrollPane(list));
-
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(panel);
-        frame.setBounds(100,100,200,400);
-        frame.setVisible(true);
     }
 }

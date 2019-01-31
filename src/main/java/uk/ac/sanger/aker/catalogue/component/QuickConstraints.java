@@ -4,6 +4,20 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 /**
+ * A constraints object for a {@link java.awt.GridBagLayout GridBagLayout} that
+ * has a few helper methods added.
+ * <p>This version has a couple of left- and right-fields that can be switched to
+ * using {@link #left()} and {@link #right()} so you can generate a two-column layout quickly.
+ *
+ * <p>E.g.
+ * <pre>
+ *     QuickConstraints con = new QuickConstraints();
+ *     add(nameLabel, con.left());
+ *     add(nameField, con.right());
+ *     add(addressLabel, con.incy().left());
+ *     add(addressField, con.right());
+ * </pre>
+ *
  * @author dr6
  */
 public class QuickConstraints extends GridBagConstraints {
@@ -27,12 +41,20 @@ public class QuickConstraints extends GridBagConstraints {
                 LINE_START, NONE, insets, 0, 0);
     }
 
+    /**
+     * Switch the {@link #gridx} and {@link #anchor} to {@link #leftx} and {@link #leftAnchor}
+     * @return this constraints object
+     */
     public QuickConstraints left() {
         gridx = leftx;
         anchor = leftAnchor;
         return this;
     }
 
+    /**
+     * Switch the {@link #gridx} and {@link #anchor} to {@link #rightx} and {@link #rightAnchor}
+     * @return this constraints object
+     */
     public QuickConstraints right() {
         gridx = rightx;
         anchor = rightAnchor;
@@ -44,6 +66,10 @@ public class QuickConstraints extends GridBagConstraints {
         return this;
     }
 
+    /**
+     * Increments {@link #gridy} by one and returns this.
+     * @return this constraints object
+     */
     public QuickConstraints incy() {
         this.gridy += 1;
         return this;

@@ -14,13 +14,13 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
  * @author dr6
  */
 public class ProcessList extends JPanel {
-    private AbstractEditableListModel<AkerProcess> listModel;
+    private DefaultEditableListModel<AkerProcess> listModel;
     private JList<AkerProcess> list;
     private JComboBox<AkerProcess> combo;
     private JButton addButton;
 
     public ProcessList(List<AkerProcess> allProcesses, Product product) {
-        listModel = new AbstractEditableListModel<>(product::getProcesses);
+        listModel = new DefaultEditableListModel<>(product::getProcesses);
         list = new JList<>(listModel);
         list.setPrototypeCellValue(new AkerProcess("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"));
         list.setCellRenderer(new ListNameRenderer());

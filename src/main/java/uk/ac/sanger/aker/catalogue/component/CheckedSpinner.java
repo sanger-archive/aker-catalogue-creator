@@ -7,6 +7,10 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeCheckbo
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeSpinner;
 
 /**
+ * A component containing a checkbox and an integer spinner.
+ * The spinner is disabled unless the checkbox is ticked.
+ * The {@link #getValue value} of the {@code CheckedSpinner} is
+ * the spinner's value if the checkbox is ticked, otherwise null.
  * @author dr6
  */
 public class CheckedSpinner extends JPanel {
@@ -26,10 +30,22 @@ public class CheckedSpinner extends JPanel {
         add(Box.createHorizontalGlue());
     }
 
+    /**
+     * Gets the input value for this component.
+     * If the checkbox is ticked, the value is the spinner's current value.
+     * Otherwise, the value is null.
+     * @return the current value, or null
+     */
     public Integer getValue() {
         return (checkBox.isSelected() ? (Integer) spinner.getValue() : null);
     }
 
+    /**
+     * Sets the current value for this component.
+     * If {@code value} is null, the checkbox will be unticked.
+     * Otherwise, the checkbox will be ticked and the value set in the spinner.
+     * @param value the value to set
+     */
     public void setValue(Integer value) {
         checkBox.setSelected(value!=null);
         if (value!=null) {

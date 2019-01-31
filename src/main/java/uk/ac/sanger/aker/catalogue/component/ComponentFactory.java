@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * Collection of static methods used to create swing components for the UI.
  * @author dr6
  */
 public class ComponentFactory {

@@ -8,6 +8,12 @@ import java.awt.Color;
 import java.awt.Component;
 
 /**
+ * A renderer to use in {@link JList}s and {@link javax.swing.JComboBox}es in this application.
+ * If the value being rendered is an instance of {@link HasName}, then its name will be rendered.
+ * Html rendering in instances of this class is disabled by default, so if a user creates an item
+ * with the name {@code <html><b>Hi there</b></html>}, it will appear as
+ * {@code <html><b>Hi there</b></html>} rather than <b>Hi there</b>.
+ * Also, this list shows the selected item in grey when the list itself is not in focus.
  * @author dr6
  */
 public class ListNameRenderer extends DefaultListCellRenderer {

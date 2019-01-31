@@ -9,11 +9,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * This tool converts JSON to a catalogue.
  * @author dr6
  */
 public class JsonImporter extends JsonInput {
     private enum PairPosition { FROM, TO }
 
+    /**
+     * Reconstructs the catalogue from JSON.
+     * The JSON should be an object with the key "catalogue", whose value contains the details of the catalogue.
+     * @param jsonValue a JSON object containing a catalogue
+     * @return the reconstructed catalogue
+     * @exception IOException there was a problem reading or reconstructing the catalogue
+     */
     public Catalogue importCatalogue(JsonValue jsonValue) throws IOException {
         Objects.requireNonNull(jsonValue, "jsonValue is null");
         if (!(jsonValue instanceof JsonObject)) {
@@ -54,7 +62,7 @@ public class JsonImporter extends JsonInput {
         return mod;
     }
 
-    public void readProcesses(JsonObject catData, List<AkerProcess> processes, List<Module> modules) throws IOException {
+    private void readProcesses(JsonObject catData, List<AkerProcess> processes, List<Module> modules) throws IOException {
         Map<String, Module> moduleNames = new HashMap<>();
         for (JsonObject proData : iterObjects(catData, "processes")) {
             AkerProcess pro = new AkerProcess();
@@ -91,7 +99,7 @@ public class JsonImporter extends JsonInput {
         }
     }
 
-    public void readProducts(JsonObject catData, List<Product> products, List<AkerProcess> processes) throws IOException {
+    private void readProducts(JsonObject catData, List<Product> products, List<AkerProcess> processes) throws IOException {
         Map<String, AkerProcess> processUuids = processes.stream().collect(Collectors.toMap(AkerProcess::getUuid, p->p));
         for (JsonObject prodData : iterObjects(catData, "products")) {
             Product prod = new Product();

@@ -6,6 +6,7 @@ import uk.ac.sanger.aker.catalogue.model.Product;
 import java.util.*;
 
 /**
+ * A {@code ListActor} for products..
  * @author dr6
  */
 public class ProductListActor implements ListActor<Product> {

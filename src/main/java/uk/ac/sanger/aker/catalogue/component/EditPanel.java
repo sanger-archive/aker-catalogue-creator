@@ -8,6 +8,7 @@ import java.awt.Component;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 
 /**
+ * A base class for panels that are editing part of the model.
  * @author dr6
  */
 abstract class EditPanel extends JPanel {

@@ -6,6 +6,7 @@ import uk.ac.sanger.aker.catalogue.model.*;
 import java.util.*;
 
 /**
+ * A {@code ListActor} for processes.
  * @author dr6
  */
 public class ProcessListActor implements ListActor<AkerProcess> {

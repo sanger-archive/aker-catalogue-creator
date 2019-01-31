@@ -8,6 +8,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
+ * Mouse control for the {@link ProcessModulePanel}.
+ * Controls include:
+ * <ul>
+ *     <li>Selecting a module or path with the left mouse button</li>
+ *     <li>Double-clicking to add a module</li>
+ *     <li>Dragging a module to a new position</li>
+ *     <li>Right-dragging to add a path (with or without the shift key)</li>
+ *     <li>Releasing right button to set the path endpoint</li>
+ * </ul>
+ * Ctrl-LMB is treated as an alternative to RMB.
  * @author dr6
  */
 public class ModuleMouseControl extends MouseAdapter {

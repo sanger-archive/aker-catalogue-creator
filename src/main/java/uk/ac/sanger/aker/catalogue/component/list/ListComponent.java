@@ -17,6 +17,11 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeLabel;
 
 /**
+ * A component containing a label, a list, and an add button.
+ * The add button can add new items to the list.
+ * Selecting or double-clicking an item will activate the item.
+ * When the list has focus, the delete or backspace key will delete the selected item from the list.
+ * The actions themselves are controlled by a callback object implementing {@link ListActor}.
  * @author dr6
  */
 public class ListComponent<E extends HasName> extends JPanel implements ListSelectionListener {

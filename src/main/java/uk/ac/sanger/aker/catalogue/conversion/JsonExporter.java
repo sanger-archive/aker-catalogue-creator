@@ -8,15 +8,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * This tool converts a catalogue to JSON.
  * @author dr6
  */
 public class JsonExporter extends JsonOutput {
+    /**
+     * Create a JSON representation of a catalogue, ready to be saved to a file.
+     * At the top level this is an object with one key, {@code "catalogue"},
+     * whose value is given by {@link #toJson(Catalogue)}
+     * @param catalogue the catalogue to export
+     * @return a {@code JsonValue} that can be written to a file
+     */
     public JsonValue toExportData(Catalogue catalogue) {
         return createObjectBuilder()
                 .add("catalogue", toJson(catalogue))
                 .build();
     }
 
+    /**
+     * A JSON version of a catalogue.
+     * The catalogue data includes details of its products and processes.
+     * @param catalogue the catalogue to serialise
+     * @return a {@code JsonValue} representing the information in the catalogue
+     */
     public JsonValue toJson(Catalogue catalogue) {
         JsonArrayBuilder processArrayBuilder = createArrayBuilder();
         for (AkerProcess pro : catalogue.getProcesses()) {
@@ -35,6 +49,12 @@ public class JsonExporter extends JsonOutput {
                 .build();
     }
 
+    /**
+     * A JSON version of a process.
+     * The process data includes details of its modules and parameters.
+     * @param process the process to serialise
+     * @return a {@code JsonValue} representing the information in the process
+     */
     public JsonValue toJson(AkerProcess process) {
         JsonArrayBuilder paramArrayBuilder = createArrayBuilder();
         JsonArrayBuilder pairArrayBuilder = createArrayBuilder();
@@ -69,6 +89,12 @@ public class JsonExporter extends JsonOutput {
                 .build();
     }
 
+    /**
+     * A JSON version of a product.
+     * The product data includes uuids of processes.
+     * @param product the product to serialise
+     * @return a {@code JsonValue} representing the information in the product
+     */
     public JsonValue toJson(Product product) {
         JsonArrayBuilder processArrayBuilder = createArrayBuilder();
         for (AkerProcess pro : product.getProcesses()) {
