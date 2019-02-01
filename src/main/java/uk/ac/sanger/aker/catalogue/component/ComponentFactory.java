@@ -79,6 +79,7 @@ public class ComponentFactory {
         return combo;
     }
 
+    /** Makes a button with the help icon and "Help" tooltip. */
     public static JButton makeHelpButton() {
         JButton button = new JButton(Help.HELP_ICON);
         button.setToolTipText("Help");

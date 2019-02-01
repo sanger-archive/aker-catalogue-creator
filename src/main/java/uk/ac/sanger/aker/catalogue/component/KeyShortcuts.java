@@ -12,8 +12,7 @@ import static java.awt.event.KeyEvent.*;
  * Keyboard helper for the catalogue application.
  * Stores appropriate keyboard shortcuts for a set of common operations (open, save etc.).
  * <p>Usage is e.g.
- * <pre>
- *   KeyShortcuts.SAVE.register(frame, e -> performSave());</pre>
+ * <br>{@code KeyShortcuts.SAVE.register(frame, e -> performSave());}
  * @author dr6
  */
 public class KeyShortcuts {
