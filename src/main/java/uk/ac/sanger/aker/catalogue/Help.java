@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
  * @author dr6
  */
 public class Help {
+    private Help() {}
+
     /** The icon to use for a help button. */
     public static final Icon HELP_ICON = loadIcon("images/help.png");
     /** The text that will be used when a requested text resource could not be loaded. */

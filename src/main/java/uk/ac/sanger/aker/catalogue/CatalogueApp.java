@@ -45,7 +45,7 @@ public class CatalogueApp implements Runnable {
     /**
      * Creates a new catalogue and frame and shows it.
      * This method is invoked by the AWT thread when the application is run.
-     * @see Main#main
+     * @see Main
      */
     @Override
     public void run() {
@@ -310,7 +310,7 @@ public class CatalogueApp implements Runnable {
     /**
      * Helper method: does the first given string end with the second given string, ignoring case?
      * If either argument is null, returns false.
-     * This uses {@link String#regionMatches} to compare parts of the string, so it does not
+     * This uses {@link String#regionMatches String.regionMatches} to compare parts of the string, so it does not
      * require transforming the whole strings to upper or lower case (or both).
      * @param string the string to look inside
      * @param sub the string that might be at the end of the first string

@@ -16,7 +16,7 @@ abstract class EditPanel extends JPanel {
     protected DocumentListener documentListener;
 
     /**
-     * Gets a change listener that will trigger {@link #updateState}.
+     * Gets a change listener that will trigger {@link #updateState updateState}.
      * Multiple calls to this method will return the same listener object.
      */
     protected ChangeListener getChangeListener() {
@@ -27,7 +27,7 @@ abstract class EditPanel extends JPanel {
     }
 
     /**
-     * Gets a document listener that will trigger {@link #updateState}.
+     * Gets a document listener that will trigger {@link #updateState updateState}.
      * Multiple calls to this method will return the same listener object.
      */
     protected DocumentListener getDocumentListener() {

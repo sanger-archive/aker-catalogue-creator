@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
  * @author dr6
  */
 public class ComponentFactory {
+    private ComponentFactory() {}
+
     /**
      * Makes an unbounded integer {@code JSpinner} with the initial value zero.
      */

@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
  * @author dr6
  */
 public class ModuleLayoutUtil {
+    private ModuleLayoutUtil() {}
+
     private static final int XSEP = 160, YSEP = 80;
 
     private static List<List<Module>> getRows(Collection<? extends Module> modules, Collection<? extends ModulePair> pairs) {

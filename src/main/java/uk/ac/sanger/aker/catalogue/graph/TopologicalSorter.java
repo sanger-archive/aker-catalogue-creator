@@ -57,8 +57,8 @@ public class TopologicalSorter<E> {
 
     /**
      * Gets the map of each element to the set of elements that are required to precede it.
-     * This map is generated when {@link #setRelations} is called, and each set is emptied during a
-     * successful {@link #sort}.
+     * This map is generated when {@link #setRelations setRelations} is called, and each set is emptied during a
+     * successful {@link #sort sort}.
      * @return The map of each element to the set of elements that are required to preceded it
      */
     public Map<E, Set<E>> getPreceders() {

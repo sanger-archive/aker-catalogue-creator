@@ -61,7 +61,7 @@ public class Module implements HasName {
     }
 
     /**
-     * A module has a parameter if either its {@link #setMinValue} or {@link #setMaxValue} is set.
+     * A module has a parameter if either its {@link #setMinValue min value} or {@link #setMaxValue max value} is set.
      */
     public boolean hasParameter() {
         return (this.minValue!=null || this.maxValue!=null);

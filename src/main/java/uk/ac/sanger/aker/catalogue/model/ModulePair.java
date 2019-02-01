@@ -5,7 +5,7 @@ package uk.ac.sanger.aker.catalogue.model;
  * When a process is serialised, the module-pairs contain the names of the modules it goes to and from.
  * When the {@code from} module is {@code Module.START}, the module-pair lists it as null.
  * When the {@code to} module is {@code Module.END}, the module-pair lists it as null.
- * This is unambiguous, since a path cannot to <i>to</i> the start or come <i>from</i> the end.
+ * This is unambiguous, since a path cannot go <i>to</i> the start or come <i>from</i> the end.
  * @author dr6
  */
 public class ModulePair {

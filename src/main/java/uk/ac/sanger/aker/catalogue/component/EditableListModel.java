@@ -16,7 +16,7 @@ public interface EditableListModel<E> extends ListModel<E> {
 
     /**
      * Adds an element to the end of this list.
-     * By default, this delegates to {@link #insert}.
+     * By default, this delegates to {@link #insert insert}.
      * @param element the element to add
      */
     default void add(E element) {

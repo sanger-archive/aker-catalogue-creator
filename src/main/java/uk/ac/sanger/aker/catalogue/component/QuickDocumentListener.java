@@ -5,7 +5,7 @@ import javax.swing.event.DocumentListener;
 
 /**
  * A {@link FunctionalInterface functional} version of {@code DocumentListener}.
- * The {@link #anyChange} method is called for any update operation.
+ * The {@link #anyChange anyChange} method is called for any update operation.
  * @author dr6
  */
 @FunctionalInterface

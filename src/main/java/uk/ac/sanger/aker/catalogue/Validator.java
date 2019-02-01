@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 /**
- * Valid various features of a catalogue.
+ * Validate various features of a catalogue.
  * Types of problem are enumerated by {@link Validator.Problem}.
  * <ul>
  *     <li>A module added to a process graph is not connected via any path.</li>
@@ -21,8 +21,8 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
  *     <li>Multiple {process/modules/products} have the same name.</li>
  *     <li>Multiple objects in the catalogue have the same UUID.</li>
  * </ul>
- * Call {@link #findProblems} to see if there are any problems, and
- * {@link #problemsHtml} to get an html description of the problems found.
+ * Call {@link #findProblems findProblems findProblems} to see if there are any problems, and
+ * {@link #problemsHtml problemsHtml} to get an html description of the problems found.
  * @author dr6
  */
 public class Validator {
@@ -69,7 +69,7 @@ public class Validator {
 
     /**
      * Finds problems with the catalogue. The problems are stored inside the {@code Validator}, and
-     * details can be retrieved subsequently with {@link #problemsHtml}.
+     * details can be retrieved subsequently with {@link #problemsHtml problemsHtml}.
      * @param catalogue the catalogue to check for problems
      * @return true if any problems were found, otherwise false
      */
@@ -109,7 +109,7 @@ public class Validator {
      * Get an html description of the problems found.
      * This will comprise a series of paragraphs (the types of problem), each containing an unordered list
      * (the items found with that problem).
-     * {@link #findProblems} should have been called before this method is called.
+     * {@link #findProblems findProblems} should have been called before this method is called.
      * @return a string describing the problems found in html
      */
     public String problemsHtml() {
@@ -175,7 +175,8 @@ public class Validator {
      * Constructs a string containing an unordered list ({@code <ul>...</ul>} in html).
      * Each item will be listed as {@code "Product: <name>"} for a {@link Product product}, and
      * {@code "Process: <name>"} for a {@link AkerProcess process}.
-     * The names of the items will be escaped using {@link org.apache.commons.lang3.StringEscapeUtils#escapeHtml4}.
+     * The names of the items will be escaped using
+     * {@link org.apache.commons.lang3.StringEscapeUtils#escapeHtml4 StringEscapeUtils.escapeHtml4}.
      * @param items the items to include in the list
      * @return a string containing the html for an unordered list.
      */

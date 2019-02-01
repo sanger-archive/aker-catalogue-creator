@@ -4,7 +4,7 @@ package uk.ac.sanger.aker.catalogue;
  * Message processor.
  * Given a template like:
  * <tt>"The following item(s) (is|are) here"</tt>,
- * the {@link #process} method can produce either
+ * the {@link #process process} method can produce either
  * <tt>"The following item is here"</tt>
  * or
  * <tt>"The following items are here"</tt>
@@ -12,6 +12,8 @@ package uk.ac.sanger.aker.catalogue;
  * @author dr6
  */
 public class MessageVar {
+    private MessageVar() {}
+
     public static final int SINGULAR = 1, PLURAL = 2;
 
     /**
