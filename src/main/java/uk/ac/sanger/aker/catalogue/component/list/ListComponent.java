@@ -108,6 +108,11 @@ public class ListComponent<E extends HasName> extends JPanel implements ListSele
         items.forEach(model::addElement);
     }
 
+    /**
+     * If one item is selected in the list, returns that.
+     * If none or multiple items are selected, returns null.
+     * @return the single selected item from the list, or null if the number of selected items is not 1
+     */
     public E singleSelectedItem() {
         int index = list.getMinSelectionIndex();
         if (index>=0 && index==list.getMaxSelectionIndex()) {

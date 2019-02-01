@@ -11,6 +11,8 @@ import java.awt.*;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 
 /**
+ * The panel for viewing and editing details of a {@link AkerProcess process}.
+ * It also contains the {@link ProcessModulePanel} which shows the graph.
  * @author dr6
  */
 public class ProcessPanel extends EditPanel {

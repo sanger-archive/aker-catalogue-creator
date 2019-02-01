@@ -11,6 +11,11 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeHeadlin
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextField;
 
 /**
+ * The panel in the left hand pane of the {@link CatalogueFrame main frame}.
+ * It contains the catalogue's simple data fields (url, pipeline etc.),
+ * and lists the catalogue's contents (modules, processes and products).
+ * The simple data and lists of contents can all be edited, and those
+ * edits are saved to the {@link Catalogue model}.
  * @author dr6
  */
 public class CataloguePanel extends EditPanel {

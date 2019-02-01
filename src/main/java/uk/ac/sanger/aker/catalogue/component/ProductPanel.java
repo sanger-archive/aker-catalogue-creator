@@ -11,6 +11,8 @@ import java.awt.*;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.*;
 
 /**
+ * The panel for showing and editing the details of a product.
+ * It includes the {@link ProcessList} specifying which processes are included in this product.
  * @author dr6
  */
 public class ProductPanel extends EditPanel {

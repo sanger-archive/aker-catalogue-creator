@@ -3,6 +3,7 @@ package uk.ac.sanger.aker.catalogue;
 import javax.swing.SwingUtilities;
 
 /**
+ * The entry point of the application.
  * @author dr6
  */
 public class Main {

@@ -11,7 +11,11 @@ import java.util.List;
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeButton;
 
 /**
+ * A component for managing a list of processes in a product.
+ * The processes can be reordered by dragging.
+ * New processes can be added using the included combobox and add button.
  * @author dr6
+ * @see ListTransferHandler
  */
 public class ProcessList extends JPanel {
     private DefaultEditableListModel<AkerProcess> listModel;

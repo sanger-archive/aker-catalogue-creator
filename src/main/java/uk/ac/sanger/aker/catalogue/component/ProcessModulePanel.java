@@ -14,6 +14,9 @@ import java.awt.event.FocusEvent;
 import java.util.*;
 
 /**
+ * A panel showing the modules in a process.
+ * This panel shows a graph drawn by {@link ModuleGraph}.
+ * It also shows some control hints based on what is happening in the graph.
  * @author dr6
  */
 public class ProcessModulePanel extends JPanel {

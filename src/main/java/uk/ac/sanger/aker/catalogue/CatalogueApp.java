@@ -1,7 +1,6 @@
 package uk.ac.sanger.aker.catalogue;
 
 import uk.ac.sanger.aker.catalogue.component.*;
-import uk.ac.sanger.aker.catalogue.component.ComponentFactory.RunnableAction;
 import uk.ac.sanger.aker.catalogue.conversion.JsonExporter;
 import uk.ac.sanger.aker.catalogue.conversion.JsonImporter;
 import uk.ac.sanger.aker.catalogue.graph.ModuleLayout;
@@ -19,6 +18,8 @@ import java.util.stream.Stream;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 /**
+ * The main controller class of the application. This links the view ({@link CatalogueFrame} etc.)
+ * and the model ({@link Catalogue} etc.).
  * @author dr6
  */
 public class CatalogueApp implements Runnable {
@@ -41,7 +42,11 @@ public class CatalogueApp implements Runnable {
 
     private Map<AkerProcess, ModuleLayout> moduleLayoutCache = new HashMap<>();
 
-
+    /**
+     * Creates a new catalogue and frame and shows it.
+     * This method is invoked by the AWT thread when the application is run.
+     * @see Main#main
+     */
     @Override
     public void run() {
         catalogue = new Catalogue();
@@ -98,10 +103,20 @@ public class CatalogueApp implements Runnable {
         return menu;
     }
 
+    /** Gets the current catalogue, which is the root model. */
     public Catalogue getCatalogue() {
         return this.catalogue;
     }
 
+    /**
+     * Activate the given item in the view.
+     * This means either bring the item into focus ({@code open=true}) or simply select it ({@code open=false}).
+     * This method enables/disabled the copy/paste map actions in the map, and then calls
+     * a method in the frame to show the item.
+     * @param item the item to view (null to clear the view)
+     * @param open true to shift focus to the new edit panel for the item
+     * @param <E> the type of item (a model class)
+     */
     public <E> void view(E item, boolean open) {
         boolean isProcess = (item instanceof AkerProcess);
         copyModuleMapAction.setEnabled(isProcess);
@@ -109,29 +124,36 @@ public class CatalogueApp implements Runnable {
         frame.view(item, open);
     }
 
+    /** This is triggered when the products are updated, and it informs the frame. */
     public void productsUpdated() {
         frame.productsUpdated();
     }
+    /** This is triggered when the modules are updated, and it informs the frame. */
     public void modulesUpdated() {
         frame.modulesUpdated();
     }
+    /** This is triggered when the processes are updated, and it informs the frame. */
     public void processesUpdated() {
         frame.processesUpdated();
     }
 
+    /** Tells the frame to clear its edit panel. */
     public void clearEditPanel() {
         frame.clearEditPanel();
     }
 
+    /** Gets the main frame of the application. */
     public CatalogueFrame getFrame() {
         return this.frame;
     }
 
+    /** Gets whatever process is currently showing in the edit panel of the main frame. */
     private AkerProcess getSelectedProcess() {
         CataloguePanel cp = frame.getCataloguePanel();
         return (cp==null ? null : cp.getSelectedProcess());
     }
 
+    /** Sets the current catalogue to a new empty catalogue. */
     private void newCatalogue() {
         catalogue = new Catalogue();
         filePath = null;
@@ -139,6 +161,7 @@ public class CatalogueApp implements Runnable {
         moduleLayoutCache.clear();
     }
 
+    /** Shows a file dialog and loads a catalogue. */
     private void openCatalogue() {
         Path path = requestFilePath(filePath, FileDialog.LOAD);
         if (path==null) {
@@ -156,6 +179,10 @@ public class CatalogueApp implements Runnable {
         moduleLayoutCache.clear();
     }
 
+    /**
+     * Shows a save dialog and saves the catalogue.
+     * Before that, validates the catalogue and warns the user of any problems.
+     */
     private void saveCatalogueAs() {
         if (!validateForSave()) {
             return;
@@ -169,6 +196,10 @@ public class CatalogueApp implements Runnable {
         }
     }
 
+    /**
+     * If there is a set file path, saves to it, otherwise shows a save dialog and saves.
+     * Before that, validates the catalogue and warns the user of any problems.
+     */
     private void saveCatalogue() {
         if (filePath==null) {
             saveCatalogueAs();
@@ -177,6 +208,13 @@ public class CatalogueApp implements Runnable {
         }
     }
 
+    /**
+     * Loads the catalogue from the given file path.
+     * If trying to load the file raises an exception, an error will be displayed, and
+     * this method will return null.
+     * @param path the path of the file to load
+     * @return the loaded catalogue, or null if there was an error
+     */
     private Catalogue loadPath(Path path) {
         JsonImporter jim = new JsonImporter();
         Catalogue catalogue;
@@ -190,6 +228,12 @@ public class CatalogueApp implements Runnable {
         return catalogue;
     }
 
+    /**
+     * Checks the current catalogue (that has just been loaded) for cyclic paths.
+     * This is done immediately so the user can be informed at once, instead of finding out
+     * when they try to open the process for viewing.
+     * When an invalid module graph is found, it is deleted.
+     */
     private void checkPathValidity() {
         List<AkerProcess> problemProcesses = catalogue.getProcesses().stream()
                 .filter(pro -> !layOutModules(pro))
@@ -205,9 +249,16 @@ public class CatalogueApp implements Runnable {
         }
         sb.append("</ul>");
         showWarning(htmlWrap(sb.toString()), "Invalid routes");
-
     }
 
+    /**
+     * Lays out the modules for the given process, using the {@link ModuleLayoutUtil}.
+     * The layout is saved in the {@link #getLayoutCache() layout cache}.
+     * If the path in the process is invalid (i.e. contains cycles), then the path for that
+     * process is deleted, and this method returns false.
+     * @param pro the process to lay out
+     * @return true if a layout was generated and stored; false if the graph was invalid and therefore deleted
+     */
     private boolean layOutModules(AkerProcess pro) {
         try {
             ModuleLayout layout = ModuleLayoutUtil.layOut(pro.getModulePairs());
@@ -219,6 +270,12 @@ public class CatalogueApp implements Runnable {
         }
     }
 
+    /**
+     * Saves the catalogue to the given path.
+     * If the save fails, an error message is shown to the user, and this method returns false.
+     * @param path the file path to save to
+     * @return true if successful, false if unsuccessful
+     */
     private boolean savePath(Path path) {
         fillInUuids(catalogue, false);
         JsonExporter jex = new JsonExporter();
@@ -232,6 +289,13 @@ public class CatalogueApp implements Runnable {
         return true;
     }
 
+    /**
+     * Fills in UUIDs for the products and processes in this catalogue.
+     * If {@code force} is true, then existing UUIDs are replaced.
+     * Otherwise, UUIDs will only be inserted where they are missing.
+     * @param catalogue the catalogue to add UUIDs into
+     * @param force true to replace existing UUIDs
+     */
     private void fillInUuids(Catalogue catalogue, final boolean force) {
         Stream.<HasUuid>concat(catalogue.getProcesses().stream(), catalogue.getProducts().stream())
                 .forEach(item -> {
@@ -243,11 +307,28 @@ public class CatalogueApp implements Runnable {
         frame.editPanelLoad();
     }
 
+    /**
+     * Helper method: does the first given string end with the second given string, ignoring case?
+     * If either argument is null, returns false.
+     * This uses {@link String#regionMatches} to compare parts of the string, so it does not
+     * require transforming the whole strings to upper or lower case (or both).
+     * @param string the string to look inside
+     * @param sub the string that might be at the end of the first string
+     * @return true if {@code string} ends with {@code sub}, ignoring case.
+     */
     private static boolean endsWithIgnoreCase(String string, String sub) {
         return (string!=null && sub!=null && string.length() >= sub.length() &&
                 string.regionMatches(true, string.length()-sub.length(), sub, 0, sub.length()));
     }
 
+    /**
+     * Shows a file dialog.
+     * @param path the initially selected file path
+     * @param mode either {@link FileDialog#LOAD} or {@link FileDialog#SAVE}, indicating the type of
+     *             file dialog to show
+     * @return the path selected by the user in the file dialog, or null if the dialog was closed without
+     *         selecting a file
+     */
     private Path requestFilePath(Path path, int mode) {
         FileDialog fd = new FileDialog(frame, mode==FileDialog.SAVE ? "Save catalogue" : "Load catalogue", mode);
         if (path!=null) {
@@ -279,6 +360,11 @@ public class CatalogueApp implements Runnable {
         return Paths.get(dir, filename);
     }
 
+    /**
+     * Copies the module positions and paths from the currently selected process (if any) to a field
+     * so they can be later pasted somewhere else.
+     * @see CopiedModuleMap
+     */
     private void copyModuleMap() {
         AkerProcess pro = getSelectedProcess();
         if (pro==null) {
@@ -287,6 +373,11 @@ public class CatalogueApp implements Runnable {
         copiedModuleMap = new CopiedModuleMap(getLayoutCache().get(pro), pro.getModulePairs());
     }
 
+    /**
+     * Pastes the copied module positions and paths (if any) to the currently selected process (if any).
+     * Notifies the frame to reopen the process to view its changed contents.
+     * @see CopiedModuleMap
+     */
     private void pasteModuleMap() {
         AkerProcess pro = getSelectedProcess();
         if (pro==null || copiedModuleMap==null) {
@@ -303,15 +394,31 @@ public class CatalogueApp implements Runnable {
         frame.view(pro, false);
     }
 
+    /**
+     * Wraps the given html body in tags for display in a {@link JOptionPane}
+     * @param body html text
+     * @return html text wrapped in {@code <html><body>} tags
+     */
     public static String htmlWrap(String body) {
         return "<html><body style='width:400px; padding: 5px;'>" + body + "</body></html>";
     }
 
+    /**
+     * Shows the given error message and details of the exception.
+     * The exception stack trace will be html-escaped and included in the message.
+     * @param title the title for the message
+     * @param message the text of the message (html)
+     * @param exception the exception to show the stack trace for
+     */
     private void showError(String title, String message, Exception exception) {
         String text = htmlWrap(message + "<br>" + escapeHtml4(exception.getMessage()));
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Checks the catalogue for problems, and display a message to the user.
+     * @see Validator
+     */
     private void validateCatalogue() {
         Validator validator = new Validator(process -> moduleLayoutCache.get(process));
         if (validator.findProblems(catalogue)) {
@@ -321,14 +428,29 @@ public class CatalogueApp implements Runnable {
         }
     }
 
+    /**
+     * Shows a warning in a {@link JOptionPane}. The given text should be already prepared for html.
+     * @param text the text of the warning
+     * @param title the title of the warning
+     */
     private void showWarning(String text, String title) {
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Shows information in {@link JOptionPane}. The given text should be already prepared for html.
+     * @param text the text of the message
+     * @param title the title of the message
+     */
     private void showInfo(String text, String title) {
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Checks the catalogue for problems in preparation for a save.
+     * If problems are found, the user must confirm that they want to proceed.
+     * @return true to proceed, false to halt.
+     */
     private boolean validateForSave() {
         Validator validator = new Validator(process -> moduleLayoutCache.get(process));
         if (!validator.findProblems(catalogue)) {
@@ -341,6 +463,10 @@ public class CatalogueApp implements Runnable {
         return (result==JOptionPane.OK_OPTION);
     }
 
+    /**
+     * Gets the map of process to the layout for that process.
+     * This gives direct access to the map so it can be updated by a receiving method.
+     */
     public Map<AkerProcess, ModuleLayout> getLayoutCache() {
         return this.moduleLayoutCache;
     }

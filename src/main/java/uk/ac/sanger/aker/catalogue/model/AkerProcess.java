@@ -3,6 +3,10 @@ package uk.ac.sanger.aker.catalogue.model;
 import java.util.*;
 
 /**
+ * A process in the catalogue.
+ * A process is a specified task that can be requested from a LIMS.
+ * Processes include options for modules, which are specified by {@link ModulePair}s.
+ * Processes are part of products.
  * @author dr6
  */
 public class AkerProcess implements HasName, HasUuid {

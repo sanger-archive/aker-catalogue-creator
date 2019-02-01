@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A catalogue is the set of work offered by a LIMS.
+ * The products are items that a user can order in Aker.
+ * A product is made up of processes, which represent types of work Aker can order in the LIMS.
+ * A process includes modules, which are options a user can choose when ordering work.
+ * The modules, processes and products described in a catalogue are all listed directly inside the
+ * {@code Catalogue} object, and they also have direct references to each other.
  * @author dr6
  */
 public class Catalogue {

@@ -12,6 +12,8 @@ import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeHeadlin
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeTextField;
 
 /**
+ * A panel for editing a module.
+ * Includes fields for editing the name and parameter bounds.
  * @author dr6
  */
 public class ModulePanel extends EditPanel {

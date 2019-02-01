@@ -33,6 +33,10 @@ public class ModuleMouseControl extends MouseAdapter {
         this.panel = panel;
     }
 
+    /**
+     * Sets the origin of the graph. Positions in mouse events are adjusted by this origin to find
+     * their correct position in graph space.
+     */
     public void setOrigin(int x0, int y0) {
         this.x0 = x0;
         this.y0 = y0;

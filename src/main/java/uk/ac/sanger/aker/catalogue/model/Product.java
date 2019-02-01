@@ -3,6 +3,9 @@ package uk.ac.sanger.aker.catalogue.model;
 import java.util.*;
 
 /**
+ * A product, representing a thing that a user can order in Aker.
+ * A product has some direct data fields, such as a name and a UUID, but primarily
+ * it is a sequence of {@link AkerProcess processes}.
  * @author dr6
  */
 public class Product implements HasName, HasUuid {
