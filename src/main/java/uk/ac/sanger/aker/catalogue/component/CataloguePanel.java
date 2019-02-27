@@ -5,6 +5,7 @@ import uk.ac.sanger.aker.catalogue.component.list.*;
 import uk.ac.sanger.aker.catalogue.model.*;
 
 import javax.swing.JTextField;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 import static uk.ac.sanger.aker.catalogue.component.ComponentFactory.makeHeadline;
@@ -26,11 +27,11 @@ public class CataloguePanel extends EditPanel {
     private ListComponent<Module> moduleList;
     private ListComponent<AkerProcess> processList;
     private ListComponent<Product> productList;
+    private boolean loading;
 
     public CataloguePanel(CatalogueApp app) {
         this.app = app;
         initComponents();
-        load();
         layOut();
     }
 
@@ -41,10 +42,19 @@ public class CataloguePanel extends EditPanel {
         moduleList = new ListComponent<>("Modules:", new ModuleListActor(app));
         processList = new ListComponent<>("Processes:", new ProcessListActor(app));
         productList = new ListComponent<>("Products:", new ProductListActor(app));
+        load();
+        DocumentListener docListener = getDocumentListener();
+        for (JTextField tf : new JTextField[]{pipelineField, urlField, limsIdField}) {
+            tf.getDocument().addDocumentListener(docListener);
+        }
     }
 
     @Override
     public void load() {
+        if (loading) {
+            return;
+        }
+        loading = true;
         Catalogue catalogue = getCatalogue();
         pipelineField.setText(catalogue.getPipeline());
         urlField.setText(catalogue.getUrl());
@@ -52,6 +62,7 @@ public class CataloguePanel extends EditPanel {
         moduleList.setItems(catalogue.getModules());
         processList.setItems(catalogue.getProcesses());
         productList.setItems(catalogue.getProducts());
+        loading = false;
     }
 
     private void layOut() {
@@ -79,7 +90,13 @@ public class CataloguePanel extends EditPanel {
 
     @Override
     protected void updateState() {
-        // nothing
+        if (loading) {
+            return;
+        }
+        Catalogue catalogue = getCatalogue();
+        catalogue.setPipeline(pipelineField.getText().trim());
+        catalogue.setUrl(urlField.getText().trim());
+        catalogue.setLimsId(limsIdField.getText().trim());
     }
 
     @Override
